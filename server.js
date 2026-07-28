@@ -16,6 +16,14 @@ app.use(express.static('public'));
 
 const rooms = {};
 
+// Paleta de colores para los 4 héroes (Azul, Rojo, Verde, Dorado/Naranja)
+const HERO_COLORS = [
+  '#2563eb', // Azul (Héroe 1)
+  '#dc2626', // Rojo (Héroe 2)
+  '#16a34a', // Verde (Héroe 3)
+  '#d97706'  // Dorado/Naranja (Héroe 4)
+];
+
 // Estado base para crear una sala nueva
 function createRoomState() {
   return {
@@ -23,7 +31,7 @@ function createRoomState() {
     threat: { name: 'Plan Principal', baseThreat: 1, current: 1 },
     villains: [{ id: 'v1', name: 'Villano Principal', baseHp: 14, hp: 14 }],
     heroes: [
-      { id: 'h1', name: 'Héroe 1', hp: 10, maxHp: 10 }
+      { id: 'h1', name: 'Héroe 1', hp: 10, maxHp: 10, color: HERO_COLORS[0] }
     ]
   };
 }
@@ -48,8 +56,16 @@ io.on('connection', (socket) => {
 
     // Asegurar compatibilidad de estructura
     if (!rooms[code].heroes) {
-      rooms[code].heroes = [{ id: 'h1', name: 'Héroe 1', hp: 10, maxHp: 10 }];
+      rooms[code].heroes = [{ id: 'h1', name: 'Héroe 1', hp: 10, maxHp: 10, color: HERO_COLORS[0] }];
     }
+    
+    // Asegurar que todos los héroes existentes tengan color asignado
+    rooms[code].heroes.forEach((h, index) => {
+      if (!h.color) {
+        h.color = HERO_COLORS[index % HERO_COLORS.length];
+      }
+    });
+
     if (!rooms[code].threat.baseThreat) {
       rooms[code].threat.baseThreat = 1;
     }
@@ -79,11 +95,13 @@ io.on('connection', (socket) => {
     // Ajustar número de héroes según cantidad de jugadores (máximo 4)
     const currentHeroes = rooms[code].heroes;
     while (currentHeroes.length < newPlayers && currentHeroes.length < 4) {
+      const heroIndex = currentHeroes.length;
       currentHeroes.push({
         id: 'h_' + Date.now() + Math.random(),
-        name: `Héroe ${currentHeroes.length + 1}`,
+        name: `Héroe ${heroIndex + 1}`,
         hp: 10,
-        maxHp: 10
+        maxHp: 10,
+        color: HERO_COLORS[heroIndex % HERO_COLORS.length]
       });
     }
 
@@ -154,18 +172,26 @@ io.on('connection', (socket) => {
     const heroes = rooms[code].heroes;
 
     if (action === 'add') {
-      // VALIDACIÓN: Solo añade el héroe si la cantidad actual es menor a 4
+      // Máximo 4 héroes
       if (heroes.length < 4) {
+        const heroIndex = heroes.length;
         heroes.push({
           id: 'h_' + Date.now(),
-          name: `Héroe ${heroes.length + 1}`,
+          name: `Héroe ${heroIndex + 1}`,
           hp: 10,
-          maxHp: 10
+          maxHp: 10,
+          color: HERO_COLORS[heroIndex % HERO_COLORS.length]
         });
-        rooms[code].players = heroes.length; // Sincroniza la cantidad de jugadores
+        rooms[code].players = heroes.length;
       }
     } else if (action === 'remove' && heroes.length > 0) {
       heroes.splice(index, 1);
+      
+      // Reasignar colores para mantener consistencia de orden
+      heroes.forEach((h, idx) => {
+        h.color = HERO_COLORS[idx % HERO_COLORS.length];
+      });
+
       rooms[code].players = Math.max(1, heroes.length);
     } else if (action === 'change_hp' && heroes[index]) {
       heroes[index].hp = Math.max(0, heroes[index].hp + delta);
