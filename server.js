@@ -11,11 +11,12 @@ const io = new Server(server, {
   }
 });
 
+// Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static('public'));
 
 const rooms = {};
 
-// Estado base de la sala
+// Estado base para crear una sala nueva
 function createRoomState() {
   return {
     players: 1,
@@ -29,10 +30,11 @@ function createRoomState() {
 
 io.on('connection', (socket) => {
 
+  // Unirse a una sala
   socket.on('join_room', ({ roomCode }) => {
     const code = roomCode ? roomCode.toUpperCase() : 'MARV';
 
-    // Salir de salas previas si las hubiera
+    // Salir de salas previas si ya estaba conectado a otra
     if (socket.roomCode) {
       socket.leave(socket.roomCode);
     }
@@ -44,7 +46,7 @@ io.on('connection', (socket) => {
       rooms[code] = createRoomState();
     }
 
-    // Asegurar estructura si la sala venía de una versión anterior
+    // Asegurar compatibilidad de estructura
     if (!rooms[code].heroes) {
       rooms[code].heroes = [{ id: 'h1', name: 'Héroe 1', hp: 10, maxHp: 10 }];
     }
@@ -52,11 +54,11 @@ io.on('connection', (socket) => {
       rooms[code].threat.baseThreat = 1;
     }
 
-    // Emitir el estado actualizado a TODOS en la sala
+    // Notificar el estado actual a todos en la sala
     io.to(code).emit('update_room', rooms[code]);
   });
 
-  // Cambiar Número de Jugadores y recalcular TANTO Amenaza como Vida Total de Villanos
+  // Cambiar Número de Jugadores y recalcular Amenaza/Vida de Villanos
   socket.on('update_players', ({ players }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -73,7 +75,7 @@ io.on('connection', (socket) => {
       v.hp = (v.baseHp || 10) * newPlayers;
     });
 
-    // Ajustar número de héroes si coincide con la cantidad de jugadores
+    // Ajustar número de héroes según cantidad de jugadores
     const currentHeroes = rooms[code].heroes;
     while (currentHeroes.length < newPlayers) {
       currentHeroes.push({
@@ -157,7 +159,7 @@ io.on('connection', (socket) => {
         hp: 10,
         maxHp: 10
       });
-      rooms[code].players = heroes.length; // Sincroniza jugadores
+      rooms[code].players = heroes.length;
     } else if (action === 'remove' && heroes.length > 0) {
       heroes.splice(index, 1);
       rooms[code].players = Math.max(1, heroes.length);
