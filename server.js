@@ -63,7 +63,8 @@ io.on('connection', (socket) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
 
-    const newPlayers = Math.max(1, parseInt(players) || 1);
+    // Limitar los jugadores entre 1 y 4
+    const newPlayers = Math.min(4, Math.max(1, parseInt(players) || 1));
     rooms[code].players = newPlayers;
 
     // Recalcular Amenaza Total (baseThreat * newPlayers)
@@ -75,9 +76,9 @@ io.on('connection', (socket) => {
       v.hp = (v.baseHp || 10) * newPlayers;
     });
 
-    // Ajustar número de héroes según cantidad de jugadores
+    // Ajustar número de héroes según cantidad de jugadores (máximo 4)
     const currentHeroes = rooms[code].heroes;
-    while (currentHeroes.length < newPlayers) {
+    while (currentHeroes.length < newPlayers && currentHeroes.length < 4) {
       currentHeroes.push({
         id: 'h_' + Date.now() + Math.random(),
         name: `Héroe ${currentHeroes.length + 1}`,
@@ -153,13 +154,16 @@ io.on('connection', (socket) => {
     const heroes = rooms[code].heroes;
 
     if (action === 'add') {
-      heroes.push({
-        id: 'h_' + Date.now(),
-        name: `Héroe ${heroes.length + 1}`,
-        hp: 10,
-        maxHp: 10
-      });
-      rooms[code].players = heroes.length;
+      // VALIDACIÓN: Solo añade el héroe si la cantidad actual es menor a 4
+      if (heroes.length < 4) {
+        heroes.push({
+          id: 'h_' + Date.now(),
+          name: `Héroe ${heroes.length + 1}`,
+          hp: 10,
+          maxHp: 10
+        });
+        rooms[code].players = heroes.length; // Sincroniza la cantidad de jugadores
+      }
     } else if (action === 'remove' && heroes.length > 0) {
       heroes.splice(index, 1);
       rooms[code].players = Math.max(1, heroes.length);
