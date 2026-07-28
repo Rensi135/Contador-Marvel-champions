@@ -1,0 +1,13 @@
+{
+  "name": "marvel-champions-counter",
+  "version": "1.0.0",
+  "description": "Contador de vida y amenaza en tiempo real para Marvel Champions",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
