@@ -1,0 +1,92 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Panel Héroe</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; user-select: none; }
+    body { background: #0f0f12; color: #fff; min-height: 100vh; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a32; padding-bottom: 8px; }
+    header h1 { font-size: 1rem; color: #fbc02d; }
+    .badge { background: #1976d2; padding: 4px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+
+    .section-title { font-size: 0.8rem; color: #8e8e93; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+    .btn-add { background: #282834; border: 1px solid #444; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+    .btn-add:active { background: #44445c; }
+
+    .heroes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; width: 100%; margin-top: 10px; }
+    .card { background: #18181c; border-radius: 12px; padding: 12px; border: 1px solid #2a2a35; border-top: 4px solid #1976d2; background: linear-gradient(180deg, #0d233a 0%, #18181c 100%); display: flex; flex-direction: column; align-items: center; }
+    .card-title { font-size: 1rem; font-weight: bold; color: #fff; background: transparent; border: none; text-align: center; outline: none; width: 100%; margin-bottom: 6px; }
+    .hp-display { font-size: 3rem; font-weight: 900; margin: 4px 0; color: #64b5f6; }
+
+    .btn-group { display: flex; gap: 6px; width: 100%; margin-top: 6px; }
+    .btn-hp { flex: 1; padding: 10px 0; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 8px; background: #282834; color: #fff; cursor: pointer; }
+    .btn-hp:active { background: #44445c; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>PANEL DE HÉROES</h1>
+    <div class="badge" id="room-badge">SALA: -</div>
+  </header>
+
+  <div class="section-title">
+    <span>Héroes de la partida</span>
+    <div>
+      <button class="btn-add" onclick="adjustHeroCount(-1)">- Héroe</button>
+      <button class="btn-add" id="btn-add-hero" onclick="adjustHeroCount(1)">+ Héroe</button>
+    </div>
+  </div>
+
+  <div class="heroes-grid" id="heroes"></div>
+
+  <script>
+    const socket = io();
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomCode = urlParams.get('room') || 'MARV';
+    document.getElementById('room-badge').innerText = `SALA: ${roomCode}`;
+
+    socket.emit('join_room', { roomCode });
+
+    socket.on('update_room', (data) => {
+      const container = document.getElementById('heroes');
+      container.innerHTML = '';
+      
+      // Control visual del botón + Héroe (Límite máximo 4)
+      const btnAdd = document.getElementById('btn-add-hero');
+      if (btnAdd) {
+        if (data.heroes.length >= 4) {
+          btnAdd.style.opacity = '0.3';
+          btnAdd.style.pointerEvents = 'none';
+        } else {
+          btnAdd.style.opacity = '1';
+          btnAdd.style.pointerEvents = 'auto';
+        }
+      }
+
+      data.heroes.forEach((h, idx) => {
+        container.innerHTML += `
+          <div class="card">
+            <input class="card-title" value="${h.name}" onchange="updateHeroName(${idx}, this.value)">
+            <div class="hp-display">${h.hp}</div>
+            <div class="btn-group">
+              <button class="btn-hp" onclick="changeHeroHP(${idx}, -1)">-1</button>
+              <button class="btn-hp" onclick="changeHeroHP(${idx}, 1)">+1</button>
+            </div>
+          </div>
+        `;
+      });
+    });
+
+    function adjustHeroCount(delta) {
+      if (delta > 0) socket.emit('update_hero', { action: 'add' });
+      else socket.emit('update_hero', { action: 'remove', index: -1 });
+    }
+    function changeHeroHP(index, delta) { socket.emit('update_hero', { action: 'change_hp', index, delta }); }
+    function updateHeroName(index, name) { socket.emit('update_hero', { action: 'change_name', index, name }); }
+  </script>
+
+</body>
+</html>

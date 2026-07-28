@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Panel Villano</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; user-select: none; }
+    body { background: #0f0f12; color: #fff; min-height: 100vh; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a32; padding-bottom: 8px; }
+    header h1 { font-size: 1rem; color: #fbc02d; }
+    .badge { background: #d32f2f; padding: 4px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+    
+    .players-selector { background: #18181c; padding: 10px 14px; border-radius: 12px; border: 1px solid #2a2a35; display: flex; align-items: center; justify-content: space-between; }
+    .players-selector span { font-size: 0.85rem; color: #aaa; font-weight: bold; text-transform: uppercase; }
+    .players-counter { display: flex; align-items: center; gap: 8px; }
+    .btn-qty { width: 36px; height: 36px; background: #282834; border: 1px solid #444; color: #fff; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-qty:active { background: #44445c; }
+    
+    .input-players { 
+      width: 60px; height: 36px; background: #000; border: 1px solid #fbc02d; color: #fbc02d; 
+      text-align: center; font-size: 1.2rem; font-weight: bold; border-radius: 8px; outline: none; 
+      -moz-appearance: textfield; user-select: text;
+    }
+    .input-players::-webkit-outer-spin-button, .input-players::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .card { background: #18181c; border-radius: 12px; padding: 14px; border: 1px solid #2a2a35; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .card.threat { border-top: 4px solid #f57c00; background: linear-gradient(180deg, #2b1800 0%, #18181c 100%); }
+    .card.villain { border-top: 4px solid #d32f2f; background: linear-gradient(180deg, #2a1112 0%, #18181c 100%); }
+
+    .input-name { font-size: 1.1rem; font-weight: bold; color: #fff; background: rgba(0, 0, 0, 0.2); border: 1px solid #333; border-radius: 6px; text-align: center; padding: 6px 10px; width: 95%; outline: none; margin-bottom: 6px; user-select: text; }
+    .input-name:focus { border-color: #fbc02d; background: #000; }
+
+    .hp-display { font-size: 3.5rem; font-weight: 900; margin: 2px 0; }
+    .threat .hp-display { color: #ffb74d; }
+    .villain .hp-display { color: #ff5252; }
+
+    .base-hp-control { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #aaa; margin: 4px 0 8px 0; font-weight: bold; }
+    
+    .input-base-hp { width: 60px; height: 32px; background: #000; text-align: center; font-size: 1.1rem; font-weight: bold; border-radius: 6px; outline: none; -moz-appearance: textfield; user-select: text; }
+    .threat .input-base-hp { border: 1px solid #f57c00; color: #ffb74d; }
+    .villain .input-base-hp { border: 1px solid #d32f2f; color: #ff5252; }
+    
+    .input-base-hp::-webkit-outer-spin-button, .input-base-hp::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .btn-group { display: flex; gap: 8px; width: 100%; margin-top: 8px; }
+    button { flex: 1; padding: 12px 0; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 8px; background: #282834; color: #fff; cursor: pointer; }
+    button:active { background: #44445c; }
+    
+    .section-title { font-size: 0.8rem; color: #8e8e93; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+    .btn-add { background: #282834; border: 1px solid #444; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+    .villains-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .btn-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #888; font-size: 1.2rem; cursor: pointer; width: auto; padding: 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>PANEL DE VILLANO</h1>
+    <div class="badge" id="room-badge">SALA: -</div>
+  </header>
+
+  <!-- SELECTOR DE JUGADORES -->
+  <div class="players-selector">
+    <span>Jugadores Totales:</span>
+    <div class="players-counter">
+      <button class="btn-qty" onclick="adjustPlayers(-1)">-</button>
+      <input type="number" class="input-players" id="players-count" value="1" min="1" onkeydown="if(event.key==='Enter') this.blur()" onchange="setPlayers(this.value)">
+      <button class="btn-qty" onclick="adjustPlayers(1)">+</button>
+    </div>
+  </div>
+
+  <!-- PLAN PRINCIPAL -->
+  <div class="section-title"><span>Plan Principal (Amenaza)</span></div>
+  <div class="card threat">
+    <input class="input-name" id="threat-title" placeholder="Nombre del Plan" onkeydown="if(event.key==='Enter') this.blur()" onchange="updateThreatName(this.value)">
+    
+    <div class="hp-display" id="threat-display">0</div>
+    
+    <div class="base-hp-control">
+      <span>Amenaza Base por Jugador:</span>
+      <input type="number" class="input-base-hp" id="threat-base" value="1" min="1" 
+        onkeydown="if(event.key==='Enter') this.blur()" 
+        onchange="updateThreatBase(this.value)">
+    </div>
+
+    <div class="btn-group">
+      <button onclick="changeThreat(-1)">-1</button>
+      <button onclick="changeThreat(1)">+1</button>
+      <button onclick="changeThreat(3)">+3</button>
+    </div>
+  </div>
+
+  <!-- VILLANOS -->
+  <div class="section-title">
+    <span>Villano(s)</span>
+    <button class="btn-add" onclick="addVillain()">+ Añadir Villano</button>
+  </div>
+  <div class="villains-list" id="villains"></div>
+
+  <script>
+    const socket = io();
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomCode = urlParams.get('room') || 'MARV';
+    document.getElementById('room-badge').innerText = `SALA: ${roomCode}`;
+
+    socket.emit('join_room', { roomCode });
+
+    socket.on('update_room', (data) => {
+      // 1. Jugadores
+      const inputP = document.getElementById('players-count');
+      if (document.activeElement !== inputP) inputP.value = data.players || 1;
+
+      // 2. Plan Principal
+      const threatInput = document.getElementById('threat-title');
+      if (document.activeElement !== threatInput) threatInput.value = data.threat.name;
+      
+      document.getElementById('threat-display').innerText = data.threat.current;
+
+      const threatBaseInput = document.getElementById('threat-base');
+      if (document.activeElement !== threatBaseInput) {
+        threatBaseInput.value = data.threat.baseThreat || 1;
+      }
+
+      // 3. Renderizado Inteligente de Villanos
+      const container = document.getElementById('villains');
+      
+      if (container.children.length !== data.villains.length) {
+        container.innerHTML = '';
+        data.villains.forEach((v, idx) => {
+          container.innerHTML += `
+            <div class="card villain" id="card-villain-${idx}">
+              ${data.villains.length > 1 ? `<button class="btn-del" onclick="removeVillain(${idx})">✕</button>` : ''}
+              
+              <input class="input-name" id="vname-${idx}" value="${v.name}" placeholder="Nombre del Villano" 
+                onkeydown="if(event.key==='Enter') this.blur()" 
+                onchange="updateVillainName(${idx}, this.value)">
+              
+              <div class="hp-display" id="vhp-${idx}">${v.hp}</div>
+              
+              <div class="base-hp-control">
+                <span>HP Base por Jugador:</span>
+                <input type="number" class="input-base-hp" id="vbase-${idx}" value="${v.baseHp || 10}" min="1" 
+                  onkeydown="if(event.key==='Enter') this.blur()" 
+                  onchange="updateBaseHP(${idx}, this.value)">
+              </div>
+
+              <div class="btn-group">
+                <button onclick="changeVillainHP(${idx}, -5)">-5</button>
+                <button onclick="changeVillainHP(${idx}, -1)">-1</button>
+                <button onclick="changeVillainHP(${idx}, 1)">+1</button>
+                <button onclick="changeVillainHP(${idx}, 5)">+5</button>
+              </div>
+            </div>
+          `;
+        });
+        return;
+      }
+
+      data.villains.forEach((v, idx) => {
+        const hpDisplay = document.getElementById(`vhp-${idx}`);
+        if (hpDisplay) hpDisplay.innerText = v.hp;
+
+        const baseInput = document.getElementById(`vbase-${idx}`);
+        if (baseInput && document.activeElement !== baseInput) {
+          baseInput.value = v.baseHp || 10;
+        }
+
+        const nameInput = document.getElementById(`vname-${idx}`);
+        if (nameInput && document.activeElement !== nameInput) {
+          nameInput.value = v.name;
+        }
+      });
+    });
+
+    // Funciones del Plan Principal
+    function updateThreatBase(val) {
+      const baseThreat = parseInt(val);
+      if (isNaN(baseThreat) || baseThreat < 1) return;
+      socket.emit('update_threat', { baseThreat });
+    }
+
+    function changeThreat(delta) { socket.emit('update_threat', { delta }); }
+    function updateThreatName(name) { socket.emit('update_threat', { name }); }
+
+    // Funciones de Jugadores
+    function adjustPlayers(delta) {
+      const inputP = document.getElementById('players-count');
+      const valActual = parseInt(inputP.value) || 1;
+      const newQty = Math.max(1, valActual + delta);
+      inputP.value = newQty;
+      socket.emit('update_players', { players: newQty });
+    }
+
+    function setPlayers(val) {
+      const p = parseInt(val);
+      if (isNaN(p) || p < 1) return;
+      socket.emit('update_players', { players: p });
+    }
+
+    // Funciones de Villanos
+    function updateBaseHP(index, baseHp) {
+      const val = parseInt(baseHp);
+      if (isNaN(val) || val < 1) return;
+      socket.emit('update_villain', { action: 'change_base_hp', index, baseHp: val });
+    }
+
+    function addVillain() { socket.emit('update_villain', { action: 'add' }); }
+    function removeVillain(index) { socket.emit('update_villain', { action: 'remove', index }); }
+    function changeVillainHP(index, delta) { socket.emit('update_villain', { action: 'change_hp', index, delta }); }
+    function updateVillainName(index, name) { socket.emit('update_villain', { action: 'change_name', index, name }); }
+  </script>
+
+</body>
+</html>
