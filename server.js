@@ -48,16 +48,18 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', rooms[code]);
   });
 
+  // Cambiar jugadores (SIN LÍMITE SUPERIOR)
   socket.on('update_players', ({ players }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
 
-    const newPlayers = Math.min(4, Math.max(1, parseInt(players) || 1));
+    // Solo se fuerza a que sea como mínimo 1
+    const newPlayers = Math.max(1, parseInt(players) || 1);
     rooms[code].players = newPlayers;
 
     const threat = rooms[code].threat;
 
-    // Recalcular Amenaza Inicial y Umbral Total
+    // Recalcular Amenaza Inicial y Umbral Total según los nuevos jugadores
     threat.current = (threat.baseThreat || 1) * newPlayers;
     threat.target = (threat.targetBase || 7) * newPlayers;
 
@@ -65,19 +67,6 @@ io.on('connection', (socket) => {
     rooms[code].villains.forEach(v => {
       v.hp = (v.baseHp || 10) * newPlayers;
     });
-
-    // Ajustar lista de Héroes según los jugadores activos
-    const currentHeroes = rooms[code].heroes;
-    while (currentHeroes.length < newPlayers && currentHeroes.length < 4) {
-      const heroIndex = currentHeroes.length;
-      currentHeroes.push({
-        id: 'h_' + Date.now() + Math.random(),
-        name: `Héroe ${heroIndex + 1}`,
-        hp: 10,
-        maxHp: 10,
-        color: HERO_COLORS[heroIndex % HERO_COLORS.length]
-      });
-    }
 
     io.to(code).emit('update_room', rooms[code]);
   });
@@ -97,7 +86,7 @@ io.on('connection', (socket) => {
       threat.current = newBase * players;
     }
 
-    // Cambiar Umbral Base por Jugador (soporta 'targetBase' y 'baseThreshold')
+    // Cambiar Umbral Base por Jugador
     const rawThreshold = targetBase !== undefined ? targetBase : baseThreshold;
     if (rawThreshold !== undefined) {
       const newTargetBase = Math.max(1, parseInt(rawThreshold) || 1);
@@ -142,8 +131,8 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', rooms[code]);
   });
 
-  // Gestor de Héroes
-  socket.on('update_hero', ({ action, index, delta, name, maxHp }) => {
+  // Gestor de Héroes (AQUÍ SÍ SE MANTIENE EL LÍMITE DE MÁXIMO 4 HÉROES)
+  socket.on('update_hero', ({ action, index, delta, name }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
     const heroes = rooms[code].heroes;
@@ -151,11 +140,9 @@ io.on('connection', (socket) => {
     if (action === 'add' && heroes.length < 4) {
       const idx = heroes.length;
       heroes.push({ id: 'h_' + Date.now(), name: `Héroe ${idx + 1}`, hp: 10, maxHp: 10, color: HERO_COLORS[idx % HERO_COLORS.length] });
-      rooms[code].players = heroes.length;
     } else if (action === 'remove' && heroes.length > 0) {
       heroes.splice(index, 1);
       heroes.forEach((h, i) => h.color = HERO_COLORS[i % HERO_COLORS.length]);
-      rooms[code].players = Math.max(1, heroes.length);
     } else if (action === 'change_hp' && heroes[index]) {
       heroes[index].hp = Math.max(0, heroes[index].hp + delta);
     } else if (action === 'change_name' && heroes[index]) {
