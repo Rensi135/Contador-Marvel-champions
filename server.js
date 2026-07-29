@@ -20,7 +20,7 @@ function createRoomState() {
     threat: { 
       name: 'Plan Principal', 
       baseThreat: 1,  // Amenaza inicial por jugador
-      targetBase: 7,  // Umbral inicial por jugador (ej: 7 por defecto)
+      targetBase: 7,  // Umbral inicial por jugador
       current: 1, 
       target: 7 
     },
@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
 
     if (!rooms[code]) rooms[code] = createRoomState();
 
-    // Asegurar estructura
+    // Asegurar compatibilidad de estructura
     const threat = rooms[code].threat;
     if (!threat.targetBase) threat.targetBase = 7;
     if (!threat.target) threat.target = threat.targetBase * rooms[code].players;
@@ -55,14 +55,18 @@ io.on('connection', (socket) => {
     const newPlayers = Math.min(4, Math.max(1, parseInt(players) || 1));
     rooms[code].players = newPlayers;
 
-    // Recalcular Umbral Total de Amenaza y Vida de Villanos
     const threat = rooms[code].threat;
+
+    // Recalcular Amenaza Inicial y Umbral Total
+    threat.current = (threat.baseThreat || 1) * newPlayers;
     threat.target = (threat.targetBase || 7) * newPlayers;
 
+    // Recalcular Vida de los Villanos
     rooms[code].villains.forEach(v => {
       v.hp = (v.baseHp || 10) * newPlayers;
     });
 
+    // Ajustar lista de Héroes según los jugadores activos
     const currentHeroes = rooms[code].heroes;
     while (currentHeroes.length < newPlayers && currentHeroes.length < 4) {
       const heroIndex = currentHeroes.length;
@@ -79,31 +83,34 @@ io.on('connection', (socket) => {
   });
 
   // Gestor del Plan Principal (Amenaza y Umbral)
-  socket.on('update_threat', ({ delta, name, baseThreat, targetBase }) => {
+  socket.on('update_threat', ({ delta, name, baseThreat, targetBase, baseThreshold }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
 
     const threat = rooms[code].threat;
     const players = rooms[code].players || 1;
 
-    // Cambiar Amenaza Base Inicial por Jugador
+    // Cambiar Amenaza Base por Jugador
     if (baseThreat !== undefined) {
       const newBase = Math.max(0, parseInt(baseThreat) || 0);
       threat.baseThreat = newBase;
       threat.current = newBase * players;
     }
 
-    // Cambiar Umbral Base por Jugador
-    if (targetBase !== undefined) {
-      const newTargetBase = Math.max(1, parseInt(targetBase) || 1);
+    // Cambiar Umbral Base por Jugador (soporta 'targetBase' y 'baseThreshold')
+    const rawThreshold = targetBase !== undefined ? targetBase : baseThreshold;
+    if (rawThreshold !== undefined) {
+      const newTargetBase = Math.max(1, parseInt(rawThreshold) || 1);
       threat.targetBase = newTargetBase;
       threat.target = newTargetBase * players;
     }
 
+    // Incrementar / Decrementar amenaza en partida
     if (delta !== undefined) {
       threat.current = Math.max(0, threat.current + delta);
     }
 
+    // Cambiar nombre del plan
     if (name !== undefined) {
       threat.name = name;
     }
@@ -111,7 +118,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', rooms[code]);
   });
 
-  // Gestor de Villanos y Héroes (Mantiene tu lógica limpia)
+  // Gestor de Villanos
   socket.on('update_villain', ({ action, index, delta, name, baseHp }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -135,6 +142,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', rooms[code]);
   });
 
+  // Gestor de Héroes
   socket.on('update_hero', ({ action, index, delta, name, maxHp }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
