@@ -3,153 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Panel Villano & Plan Principal</title>
+  <title>Panel Villano</title>
   <script src="/socket.io/socket.io.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; user-select: none; }
-    body { background: #0f0f12; color: #fff; min-height: 100vh; padding: 12px; display: flex; flex-direction: column; gap: 16px; }
-    
+    body { background: #0f0f12; color: #fff; min-height: 100vh; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
     header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a32; padding-bottom: 8px; }
-    header h1 { font-size: 1rem; color: #f59e0b; }
-    .badge { background: #d97706; padding: 4px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
-
-    /* PLAN PRINCIPAL / AMENAZA */
-    .threat-container {
-      background: #18181c;
-      border: 1px solid #2a2a35;
-      border-top: 5px solid #f59e0b;
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .plan-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #fff;
-      background: transparent;
-      border: none;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
-      text-align: center;
-      outline: none;
-      width: 100%;
-      margin-bottom: 6px;
-      padding-bottom: 4px;
-      user-select: text;
-    }
-
-    .threat-display {
-      font-size: 3rem;
-      font-weight: 900;
-      color: #f59e0b;
-      margin: 4px 0;
-    }
-    .threat-display .total {
-      font-size: 1.8rem;
-      color: #8e8e93;
-    }
-
-    /* GRID EN 2 COLUMNAS PARA LOS BOTONES */
-    .btn-grid-2col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      width: 100%;
-      margin-top: 8px;
-    }
-
-    .btn-threat {
-      padding: 10px 0;
-      font-size: 1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      cursor: pointer;
-    }
+    header h1 { font-size: 1rem; color: #fbc02d; text-transform: uppercase; }
+    .badge { background: #f57c00; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; color: #fff; }
     
-    /* Estilos diferenciados para restar y sumar */
-    .btn-minus { background: #321c1c; color: #f87171; border: 1px solid #7f1d1d; }
-    .btn-minus:active { background: #7f1d1d; color: #fff; }
-
-    .btn-plus { background: #1c2d27; color: #4ade80; border: 1px solid #14532d; }
-    .btn-plus:active { background: #14532d; color: #fff; }
-
-    /* FILA DE CONFIGURACIÓN EN 2 COLUMNAS */
-    .config-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      width: 100%;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid #2a2a32;
-    }
-
-    .config-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.75rem;
-      color: #ccc;
-    }
-
-    .config-input {
-      width: 55px;
-      background: #000;
-      border: 1px solid #f59e0b;
-      color: #f59e0b;
-      border-radius: 6px;
-      padding: 4px;
-      text-align: center;
-      font-size: 0.9rem;
-      font-weight: bold;
-      outline: none;
-    }
-
-    /* SECCIÓN VILLANOS */
-    .section-title { font-size: 0.8rem; color: #8e8e93; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
-    .btn-add { background: #282834; border: 1px solid #444; color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
-    .btn-add:active { background: #44445c; }
-
-    .villains-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; width: 100%; }
+    /* SELECTOR DE JUGADORES */
+    .players-selector { background: #18181c; padding: 10px 14px; border-radius: 12px; border: 1px solid #2a2a35; display: flex; align-items: center; justify-content: space-between; }
+    .players-selector span { font-size: 0.85rem; color: #aaa; font-weight: bold; text-transform: uppercase; }
+    .players-counter { display: flex; align-items: center; gap: 8px; }
+    .btn-qty { width: 36px; height: 36px; background: #282834; border: 1px solid #444; color: #fff; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-qty:active { background: #44445c; }
     
-    .card-villain {
-      background: #18181c;
-      border-radius: 12px;
-      padding: 12px;
-      border: 1px solid #2a2a35;
-      border-top: 5px solid #dc2626;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .input-players { 
+      width: 60px; height: 36px; background: #000; border: 1px solid #fbc02d; color: #fbc02d; 
+      text-align: center; font-size: 1.2rem; font-weight: bold; border-radius: 8px; outline: none; 
+      -moz-appearance: textfield; user-select: text;
     }
+    .input-players::-webkit-outer-spin-button, .input-players::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-    .villain-title {
-      font-size: 1rem;
-      font-weight: bold;
-      color: #fff;
-      background: transparent;
-      border: none;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
-      text-align: center;
-      outline: none;
-      width: 100%;
-      margin-bottom: 6px;
-      padding-bottom: 4px;
-      user-select: text;
-    }
+    /* TARJETAS */
+    .card { background: #18181c; border-radius: 12px; padding: 14px; border: 1px solid #2a2a35; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .card.threat { border-top: 4px solid #f57c00; background: linear-gradient(180deg, #2b1800 0%, #18181c 100%); }
+    .card.villain { border-top: 4px solid #d32f2f; background: linear-gradient(180deg, #2a1112 0%, #18181c 100%); }
 
-    .hp-display {
-      font-size: 3rem;
-      font-weight: 900;
-      margin: 4px 0;
-      color: #dc2626;
-    }
+    .input-name { font-size: 1.1rem; font-weight: bold; color: #fff; background: rgba(0, 0, 0, 0.2); border: 1px solid #333; border-radius: 6px; text-align: center; padding: 6px 10px; width: 95%; outline: none; margin-bottom: 6px; user-select: text; }
+    .input-name:focus { border-color: #fbc02d; background: #000; }
+
+    .hp-display { font-size: 3rem; font-weight: 900; margin: 2px 0; }
+    .threat .hp-display { color: #ffb74d; }
+    .villain .hp-display { color: #ff5252; }
+
+    /* CONTROLES BASE (AMENAZA Y UMBRAL) */
+    .base-controls-row { display: flex; justify-content: space-around; width: 100%; margin: 8px 0; gap: 8px; }
+    .base-control-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.75rem; color: #aaa; font-weight: bold; }
+    
+    .input-base-hp { width: 60px; height: 32px; background: #000; text-align: center; font-size: 1.1rem; font-weight: bold; border-radius: 6px; outline: none; -moz-appearance: textfield; user-select: text; }
+    .threat .input-base-hp { border: 1px solid #f57c00; color: #ffb74d; }
+    .villain .input-base-hp { border: 1px solid #d32f2f; color: #ff5252; }
+    .input-base-hp::-webkit-outer-spin-button, .input-base-hp::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* BOTONERA (+1, -1, +5, etc) */
+    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 6px; }
+    .btn-grid button { padding: 10px 0; font-size: 1.1rem; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; color: #fff; }
+    .btn-minus { background: #3e1b1b; border: 1px solid #6b2828 !important; color: #ff8a8a !important; }
+    .btn-plus { background: #1b3e2b; border: 1px solid #286b43 !important; color: #8affb3 !important; }
+    .btn-minus:active { background: #5a2727; }
+    .btn-plus:active { background: #275a3a; }
+    
+    .section-title { font-size: 0.8rem; color: #8e8e93; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+    .btn-actions { display: flex; gap: 6px; }
+    .btn-action { background: #282834; border: 1px solid #444; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; cursor: pointer; }
+    .villains-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .btn-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #888; font-size: 1.2rem; cursor: pointer; width: auto; padding: 0; }
   </style>
 </head>
 <body>
@@ -159,48 +69,59 @@
     <div class="badge" id="room-badge">SALA: -</div>
   </header>
 
-  <!-- SECCIÓN PLAN PRINCIPAL -->
-  <div class="threat-container">
-    <input type="text" id="plan-name-input" class="plan-title" placeholder="Plan Principal" onchange="changePlanName(this.value)">
+  <!-- CONTROL DE JUGADORES (AÑADIDO DE NUEVO) -->
+  <div class="players-selector">
+    <span>Jugadores Totales:</span>
+    <div class="players-counter">
+      <button class="btn-qty" onclick="adjustPlayers(-1)">-</button>
+      <input type="number" class="input-players" id="players-count" value="1" min="1" onkeydown="if(event.key==='Enter') this.blur()" onchange="setPlayers(this.value)">
+      <button class="btn-qty" onclick="adjustPlayers(1)">+</button>
+    </div>
+  </div>
+
+  <!-- PLAN PRINCIPAL -->
+  <div class="section-title"><span>Plan Principal</span></div>
+  <div class="card threat">
+    <input class="input-name" id="threat-title" placeholder="Nombre del Plan" onkeydown="if(event.key==='Enter') this.blur()" onchange="updateThreatName(this.value)">
     
-    <div class="threat-display">
-      <span id="threat-current">0</span><span class="total"> / <span id="threat-target">0</span></span>
+    <div class="hp-display">
+      <span id="threat-display">0</span> / <span id="threshold-display" style="color: #aaa; font-size: 2.2rem;">0</span>
+    </div>
+    
+    <div class="btn-grid">
+      <button class="btn-minus" onclick="changeThreat(-1)">-1</button>
+      <button class="btn-plus" onclick="changeThreat(1)">+1</button>
+      <button class="btn-minus" onclick="changeThreat(-5)">-5</button>
+      <button class="btn-plus" onclick="changeThreat(5)">+5</button>
+      <button class="btn-minus" onclick="changeThreat(-10)">-10</button>
+      <button class="btn-plus" onclick="changeThreat(10)">+10</button>
     </div>
 
-    <!-- BOTONES EN 2 COLUMNAS (RESTAR IZQUIERDA / SUMAR DERECHA) -->
-    <div class="btn-grid-2col">
-      <button class="btn-threat btn-minus" onclick="changeThreat(-1)">-1</button>
-      <button class="btn-threat btn-plus" onclick="changeThreat(1)">+1</button>
-      
-      <button class="btn-threat btn-minus" onclick="changeThreat(-5)">-5</button>
-      <button class="btn-threat btn-plus" onclick="changeThreat(5)">+5</button>
-      
-      <button class="btn-threat btn-minus" onclick="changeThreat(-10)">-10</button>
-      <button class="btn-threat btn-plus" onclick="changeThreat(10)">+10</button>
-    </div>
-
-    <div class="config-row">
-      <div class="config-item">
+    <div class="base-controls-row">
+      <div class="base-control-item">
         <span>Amenaza Base / Jugador</span>
-        <input type="number" id="base-threat-input" class="config-input" onchange="changeBaseThreat(this.value)">
+        <input type="number" class="input-base-hp" id="threat-base" value="1" min="1" 
+          onkeydown="if(event.key==='Enter') this.blur()" 
+          onchange="updateThreatBase(this.value)">
       </div>
-      <div class="config-item">
+      <div class="base-control-item">
         <span>Umbral / Jugador</span>
-        <input type="number" id="target-threat-input" class="config-input" onchange="changeTargetBaseThreat(this.value)">
+        <input type="number" class="input-base-hp" id="threshold-base" value="7" min="1" 
+          onkeydown="if(event.key==='Enter') this.blur()" 
+          onchange="updateThresholdBase(this.value)">
       </div>
     </div>
   </div>
 
-  <!-- SECCIÓN VILLANOS -->
+  <!-- VILLANOS Y ESBIRROS -->
   <div class="section-title">
     <span>Villanos y Esbirros</span>
-    <div>
-      <button class="btn-add" onclick="adjustVillainCount(-1)">- Villano</button>
-      <button class="btn-add" onclick="adjustVillainCount(1)">+ Villano</button>
+    <div class="btn-actions">
+      <button class="btn-action" onclick="removeVillain()">- Villano</button>
+      <button class="btn-action" onclick="addVillain()">+ Villano</button>
     </div>
   </div>
-
-  <div class="villains-grid" id="villains"></div>
+  <div class="villains-list" id="villains"></div>
 
   <script>
     const socket = io();
@@ -210,74 +131,136 @@
 
     socket.emit('join_room', { roomCode });
 
-    let currentVillainsCount = 0;
-
     socket.on('update_room', (data) => {
-      // 1. DIBUJAR PLAN PRINCIPAL (AMENAZA)
-      const threat = data.threat || {};
-      document.getElementById('threat-current').innerText = threat.current || 0;
-      document.getElementById('threat-target').innerText = threat.target || 0;
+      // 1. Jugadores
+      const inputP = document.getElementById('players-count');
+      if (document.activeElement !== inputP) inputP.value = data.players || 1;
 
-      if (document.activeElement !== document.getElementById('plan-name-input')) {
-        document.getElementById('plan-name-input').value = threat.name || 'Plan Principal';
-      }
-      if (document.activeElement !== document.getElementById('base-threat-input')) {
-        document.getElementById('base-threat-input').value = threat.baseThreat || 1;
-      }
-      if (document.activeElement !== document.getElementById('target-threat-input')) {
-        document.getElementById('target-threat-input').value = threat.targetBase || 7;
-      }
-
-      // 2. DIBUJAR LISTA DE VILLANOS
-      const container = document.getElementById('villains');
-      container.innerHTML = '';
+      // 2. Plan Principal
+      const threatInput = document.getElementById('threat-title');
+      if (document.activeElement !== threatInput) threatInput.value = data.threat.name || 'Plan Principal';
       
+      document.getElementById('threat-display').innerText = data.threat.current || 0;
+      
+      // Umbral Total
+      const players = data.players || 1;
+      const baseThreshold = data.threat.baseThreshold || 7;
+      document.getElementById('threshold-display').innerText = baseThreshold * players;
+
+      const threatBaseInput = document.getElementById('threat-base');
+      if (document.activeElement !== threatBaseInput) {
+        threatBaseInput.value = data.threat.baseThreat || 1;
+      }
+
+      const thresholdBaseInput = document.getElementById('threshold-base');
+      if (document.activeElement !== thresholdBaseInput) {
+        thresholdBaseInput.value = baseThreshold;
+      }
+
+      // 3. Renderizado Inteligente de Villanos
+      const container = document.getElementById('villains');
       const villains = data.villains || [];
-      currentVillainsCount = villains.length;
+
+      if (container.children.length !== villains.length) {
+        container.innerHTML = '';
+        villains.forEach((v, idx) => {
+          container.innerHTML += `
+            <div class="card villain" id="card-villain-${idx}">
+              ${villains.length > 1 ? `<button class="btn-del" onclick="removeVillainAt(${idx})">✕</button>` : ''}
+              
+              <input class="input-name" id="vname-${idx}" value="${v.name}" placeholder="Nombre del Villano" 
+                onkeydown="if(event.key==='Enter') this.blur()" 
+                onchange="updateVillainName(${idx}, this.value)">
+              
+              <div class="hp-display" id="vhp-${idx}">${v.hp}</div>
+              
+              <div class="btn-grid">
+                <button class="btn-minus" onclick="changeVillainHP(${idx}, -1)">-1</button>
+                <button class="btn-plus" onclick="changeVillainHP(${idx}, 1)">+1</button>
+                <button class="btn-minus" onclick="changeVillainHP(${idx}, -5)">-5</button>
+                <button class="btn-plus" onclick="changeVillainHP(${idx}, 5)">+5</button>
+                <button class="btn-minus" onclick="changeVillainHP(${idx}, -10)">-10</button>
+                <button class="btn-plus" onclick="changeVillainHP(${idx}, 10)">+10</button>
+              </div>
+
+              <div class="base-controls-row" style="margin-top: 10px;">
+                <div class="base-control-item">
+                  <span>HP Base por Jugador</span>
+                  <input type="number" class="input-base-hp" id="vbase-${idx}" value="${v.baseHp || 10}" min="1" 
+                    onkeydown="if(event.key==='Enter') this.blur()" 
+                    onchange="updateBaseHP(${idx}, this.value)">
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        return;
+      }
 
       villains.forEach((v, idx) => {
-        const card = document.createElement('div');
-        card.className = 'card-villain';
+        const hpDisplay = document.getElementById(`vhp-${idx}`);
+        if (hpDisplay) hpDisplay.innerText = v.hp;
 
-        card.innerHTML = `
-          <input class="villain-title" value="${v.name}" onchange="updateVillainName(${idx}, this.value)" placeholder="Nombre Villano">
-          <div class="hp-display">${v.hp}</div>
-          
-          <!-- BOTONES EN 2 COLUMNAS PARA EL VILLANO -->
-          <div class="btn-grid-2col">
-            <button class="btn-threat btn-minus" onclick="changeVillainHP(${idx}, -1)">-1</button>
-            <button class="btn-threat btn-plus" onclick="changeVillainHP(${idx}, 1)">+1</button>
-            
-            <button class="btn-threat btn-minus" onclick="changeVillainHP(${idx}, -5)">-5</button>
-            <button class="btn-threat btn-plus" onclick="changeVillainHP(${idx}, 5)">+5</button>
-            
-            <button class="btn-threat btn-minus" onclick="changeVillainHP(${idx}, -10)">-10</button>
-            <button class="btn-threat btn-plus" onclick="changeVillainHP(${idx}, 10)">+10</button>
-          </div>
+        const baseInput = document.getElementById(`vbase-${idx}`);
+        if (baseInput && document.activeElement !== baseInput) {
+          baseInput.value = v.baseHp || 10;
+        }
 
-          <div style="margin-top: 12px; font-size: 0.75rem; color: #aaa; display: flex; align-items: center; gap: 6px;">
-            <span>Vida Base / Jugador:</span>
-            <input type="number" class="config-input" style="border-color: #dc2626; color: #dc2626;" value="${v.baseHp || 10}" onchange="changeVillainBaseHp(${idx}, this.value)">
-          </div>
-        `;
-        container.appendChild(card);
+        const nameInput = document.getElementById(`vname-${idx}`);
+        if (nameInput && document.activeElement !== nameInput) {
+          nameInput.value = v.name;
+        }
       });
     });
 
-    // EVENTOS DE PLAN PRINCIPAL
-    function changeThreat(delta) { socket.emit('update_threat', { delta }); }
-    function changePlanName(name) { socket.emit('update_threat', { name }); }
-    function changeBaseThreat(val) { socket.emit('update_threat', { baseThreat: parseInt(val) || 0 }); }
-    function changeTargetBaseThreat(val) { socket.emit('update_threat', { targetBase: parseInt(val) || 1 }); }
-
-    // EVENTOS DE VILLANOS
-    function adjustVillainCount(delta) {
-      if (delta > 0) socket.emit('update_villain', { action: 'add' });
-      else if (currentVillainsCount > 1) socket.emit('update_villain', { action: 'remove', index: currentVillainsCount - 1 });
+    // Control de Jugadores
+    function adjustPlayers(delta) {
+      const inputP = document.getElementById('players-count');
+      const valActual = parseInt(inputP.value) || 1;
+      const newQty = Math.max(1, valActual + delta);
+      inputP.value = newQty;
+      socket.emit('update_players', { players: newQty });
     }
+
+    function setPlayers(val) {
+      const p = parseInt(val);
+      if (isNaN(p) || p < 1) return;
+      socket.emit('update_players', { players: p });
+    }
+
+    // Funciones Plan Principal
+    function updateThreatBase(val) {
+      const baseThreat = parseInt(val);
+      if (isNaN(baseThreat) || baseThreat < 1) return;
+      socket.emit('update_threat', { baseThreat });
+    }
+
+    function updateThresholdBase(val) {
+      const baseThreshold = parseInt(val);
+      if (isNaN(baseThreshold) || baseThreshold < 1) return;
+      socket.emit('update_threat', { baseThreshold });
+    }
+
+    function changeThreat(delta) { socket.emit('update_threat', { delta }); }
+    function updateThreatName(name) { socket.emit('update_threat', { name }); }
+
+    // Funciones Villanos
+    function updateBaseHP(index, baseHp) {
+      const val = parseInt(baseHp);
+      if (isNaN(val) || val < 1) return;
+      socket.emit('update_villain', { action: 'change_base_hp', index, baseHp: val });
+    }
+
+    function addVillain() { socket.emit('update_villain', { action: 'add' }); }
+    function removeVillain() { 
+      const container = document.getElementById('villains');
+      if (container.children.length > 0) {
+        socket.emit('update_villain', { action: 'remove', index: container.children.length - 1 });
+      }
+    }
+    function removeVillainAt(index) { socket.emit('update_villain', { action: 'remove', index }); }
     function changeVillainHP(index, delta) { socket.emit('update_villain', { action: 'change_hp', index, delta }); }
     function updateVillainName(index, name) { socket.emit('update_villain', { action: 'change_name', index, name }); }
-    function changeVillainBaseHp(index, baseHp) { socket.emit('update_villain', { action: 'change_base_hp', index, baseHp }); }
   </script>
 
 </body>
