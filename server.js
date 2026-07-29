@@ -19,8 +19,9 @@ function createRoomState() {
     players: 1,
     threat: { 
       name: 'Plan Principal', 
-      baseThreat: 1,  // Amenaza inicial por jugador
-      targetBase: 7,  // Umbral inicial por jugador
+      baseThreat: 1,     // Amenaza inicial por jugador
+      targetBase: 7,     // Umbral por jugador
+      baseThreshold: 7,  // Alias para mantener sincronía con el frontend
       current: 1, 
       target: 7 
     },
@@ -40,30 +41,33 @@ io.on('connection', (socket) => {
 
     if (!rooms[code]) rooms[code] = createRoomState();
 
-    // Asegurar compatibilidad de estructura
     const threat = rooms[code].threat;
-    if (!threat.targetBase) threat.targetBase = 7;
-    if (!threat.target) threat.target = threat.targetBase * rooms[code].players;
+    
+    // CORRECCIÓN CLAVE: Respetar el valor actual si ya existe
+    const activeThreshold = threat.targetBase !== undefined ? threat.targetBase : (threat.baseThreshold !== undefined ? threat.baseThreshold : 7);
+    threat.targetBase = activeThreshold;
+    threat.baseThreshold = activeThreshold;
+    threat.target = activeThreshold * rooms[code].players;
 
     io.to(code).emit('update_room', rooms[code]);
   });
 
-  // Cambiar jugadores (SIN LÍMITE SUPERIOR)
+  // Cambiar jugadores (Sin límite superior)
   socket.on('update_players', ({ players }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
 
-    // Solo se fuerza a que sea como mínimo 1
     const newPlayers = Math.max(1, parseInt(players) || 1);
     rooms[code].players = newPlayers;
 
     const threat = rooms[code].threat;
+    const thresholdBase = threat.targetBase || threat.baseThreshold || 7;
 
-    // Recalcular Amenaza Inicial y Umbral Total según los nuevos jugadores
+    // Recalcular Umbral Total y Amenaza Inicial
+    threat.target = thresholdBase * newPlayers;
     threat.current = (threat.baseThreat || 1) * newPlayers;
-    threat.target = (threat.targetBase || 7) * newPlayers;
 
-    // Recalcular Vida de los Villanos
+    // Recalcular Vida de Villanos
     rooms[code].villains.forEach(v => {
       v.hp = (v.baseHp || 10) * newPlayers;
     });
@@ -89,9 +93,10 @@ io.on('connection', (socket) => {
     // Cambiar Umbral Base por Jugador
     const rawThreshold = targetBase !== undefined ? targetBase : baseThreshold;
     if (rawThreshold !== undefined) {
-      const newTargetBase = Math.max(1, parseInt(rawThreshold) || 1);
-      threat.targetBase = newTargetBase;
-      threat.target = newTargetBase * players;
+      const newThreshold = Math.max(1, parseInt(rawThreshold) || 1);
+      threat.targetBase = newThreshold;
+      threat.baseThreshold = newThreshold;
+      threat.target = newThreshold * players;
     }
 
     // Incrementar / Decrementar amenaza en partida
@@ -131,7 +136,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', rooms[code]);
   });
 
-  // Gestor de Héroes (AQUÍ SÍ SE MANTIENE EL LÍMITE DE MÁXIMO 4 HÉROES)
+  // Gestor de Héroes (Límite máximo de 4 héroes)
   socket.on('update_hero', ({ action, index, delta, name }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
