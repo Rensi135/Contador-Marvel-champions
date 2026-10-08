@@ -32,7 +32,13 @@ function createRoomState(hostSocketId) {
   return {
     hostId: hostSocketId, // Guardamos el ID del creador de la sala
     selectedVillain: null,
-    threat: { name: 'Plan Principal', baseThreat: 1, targetBase: 7, current: 1, target: 7 },
+    players: 1,
+    threat: { 
+      name: 'Plan Principal', 
+      baseThreat: 1, 
+      baseThreshold: 7, 
+      current: 1 
+    },
     villains: [{ id: 'v1', name: 'Seleccionar Villano', baseHp: 10, hp: 10 }],
     sideSchemes: [],
     heroes: []
@@ -41,6 +47,7 @@ function createRoomState(hostSocketId) {
 
 io.on('connection', (socket) => {
 
+  // 1. UNIRSE A LA SALA
   socket.on('join_room', ({ roomCode }) => {
     const code = roomCode ? roomCode.toUpperCase() : 'MARV';
     if (socket.roomCode) socket.leave(socket.roomCode);
@@ -70,7 +77,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
-  // Solo el Host puede emitir la selección del preset
+  // 2. SELECCIÓN DE PRESET DE ESCENARIO
   socket.on('select_preset', ({ presetKey }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -86,19 +93,19 @@ io.on('connection', (socket) => {
     if (!preset) return;
 
     room.selectedVillain = presetKey;
+    const playerCount = room.players || 1;
 
     // Cargar Plan Principal
     room.threat.name = preset.mainScheme.name;
-    room.threat.baseThreat = preset.mainScheme.baseThreat;
-    room.threat.targetBase = preset.mainScheme.targetBase;
-    room.threat.current = preset.mainScheme.baseThreat * (room.heroes.length || 1);
-    room.threat.target = preset.mainScheme.targetBase * (room.heroes.length || 1);
+    room.threat.baseThreat = preset.mainScheme.baseThreat || 1;
+    room.threat.baseThreshold = preset.mainScheme.baseThreshold || preset.mainScheme.targetBase || 7;
+    room.threat.current = room.threat.baseThreat * playerCount;
 
     // Cargar Villano Principal
     if (room.villains.length > 0) {
       room.villains[0].name = preset.villainName;
       room.villains[0].baseHp = preset.baseHp;
-      room.villains[0].hp = preset.baseHp * (room.heroes.length || 1);
+      room.villains[0].hp = preset.baseHp * playerCount;
     }
 
     // Cargar Planes Secundarios disponibles del escenario
@@ -107,8 +114,98 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
+  // 3. CAMBIO EN EL NÚMERO DE JUGADORES
+  socket.on('update_players', ({ players }) => {
+    const code = socket.roomCode;
+    if (!code || !rooms[code]) return;
+
+    const room = rooms[code];
+    const newCount = Math.max(1, parseInt(players) || 1);
+    room.players = newCount;
+
+    // Recalcular vida de los villanos en función del nuevo número de jugadores
+    room.villains.forEach(v => {
+      v.hp = (v.baseHp || 10) * newCount;
+    });
+
+    io.to(code).emit('update_room', room);
+  });
+
+  // 4. ACTUALIZACIÓN DEL PLAN PRINCIPAL (AMENAZA)
+  socket.on('update_threat', (data) => {
+    const code = socket.roomCode;
+    if (!code || !rooms[code]) return;
+
+    const room = rooms[code];
+
+    if (data.delta !== undefined) {
+      room.threat.current = Math.max(0, (room.threat.current || 0) + data.delta);
+    }
+    if (data.name !== undefined) {
+      room.threat.name = data.name;
+    }
+    if (data.baseThreat !== undefined) {
+      room.threat.baseThreat = Math.max(1, parseInt(data.baseThreat) || 1);
+    }
+    if (data.baseThreshold !== undefined) {
+      room.threat.baseThreshold = Math.max(1, parseInt(data.baseThreshold) || 1);
+    }
+
+    io.to(code).emit('update_room', room);
+  });
+
+  // 5. GESTIÓN Y MODIFICACIÓN DE VILLANOS
+  socket.on('update_villain', (data) => {
+    const code = socket.roomCode;
+    if (!code || !rooms[code]) return;
+
+    const room = rooms[code];
+    const { action, index, delta, name, baseHp } = data;
+
+    switch (action) {
+      case 'change_hp':
+        if (room.villains[index]) {
+          room.villains[index].hp = Math.max(0, room.villains[index].hp + delta);
+        }
+        break;
+
+      case 'change_base_hp':
+        if (room.villains[index]) {
+          const newBase = Math.max(1, parseInt(baseHp) || 1);
+          room.villains[index].baseHp = newBase;
+          room.villains[index].hp = newBase * (room.players || 1);
+        }
+        break;
+
+      case 'change_name':
+        if (room.villains[index]) {
+          room.villains[index].name = name;
+        }
+        break;
+
+      case 'add':
+        const newIdx = room.villains.length + 1;
+        const defaultBase = 10;
+        room.villains.push({
+          id: `v${Date.now()}`,
+          name: `Esbirro / Villano ${newIdx}`,
+          baseHp: defaultBase,
+          hp: defaultBase * (room.players || 1)
+        });
+        break;
+
+      case 'remove':
+        if (room.villains.length > 0 && index >= 0 && index < room.villains.length) {
+          room.villains.splice(index, 1);
+        }
+        break;
+    }
+
+    io.to(code).emit('update_room', room);
+  });
+
+  // 6. DESCONEXIÓN
   socket.on('disconnect', () => {
-    // Si el host se desconecta, se recalcula el host con otro integrante de la sala
     const code = socket.roomCode;
     if (code && rooms[code] && rooms[code].hostId === socket.id) {
       const clients = io.sockets.adapter.rooms.get(code);
