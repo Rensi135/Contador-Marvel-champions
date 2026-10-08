@@ -4,7 +4,8 @@
   "description": "Contador de vida y amenaza en tiempo real para Marvel Champions",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "update-db": "node scripts/fetchData.js"
   },
   "dependencies": {
     "express": "^4.19.2",
