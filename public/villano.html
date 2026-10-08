@@ -156,20 +156,26 @@
 
     socket.emit('join_room', { roomCode });
 
+    // Función auxiliar para poblar el selector de villanos
+    function populateVillainSelect(database) {
+      const select = document.getElementById('modal-villain-select');
+      if (!select || !Array.isArray(database) || database.length === 0) return;
+
+      select.innerHTML = '<option value="">-- Seleccionar escenario --</option>';
+      database.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.key;
+        opt.textContent = `${v.villainName} [${v.encounterName}] — ${v.mainScheme.name}`;
+        select.appendChild(opt);
+      });
+    }
+
     // Recibir si es Host y el catálogo desde el servidor
     socket.on('init_session', (data) => {
       isHost = data.isHost;
 
-      if (isHost && data.database) {
-        const select = document.getElementById('modal-villain-select');
-        select.innerHTML = '<option value="">-- Seleccionar escenario --</option>';
-
-        data.database.forEach(v => {
-          const opt = document.createElement('option');
-          opt.value = v.key;
-          opt.textContent = `${v.villainName} [${v.encounterName}] — ${v.mainScheme.name}`;
-          select.appendChild(opt);
-        });
+      if (data.database) {
+        populateVillainSelect(data.database);
       }
     });
 
@@ -180,6 +186,11 @@
         modal.style.display = 'flex';
       } else {
         modal.style.display = 'none';
+      }
+
+      // Si el evento trae la base de datos, rellenamos el selector
+      if (data.database) {
+        populateVillainSelect(data.database);
       }
 
       // 1. Jugadores
