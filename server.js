@@ -1,32 +1,41 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] }
-});
+const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.static('public'));
 
-const rooms = {};
+const dbPath = path.join(__dirname, 'data', 'database.json');
+let presetDatabase = {};
 
+function loadDatabase() {
+  try {
+    if (fs.existsSync(dbPath)) {
+      presetDatabase = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+      console.log(`Base de datos cargada: ${Object.keys(presetDatabase).length} escenarios disponibles.`);
+    }
+  } catch (e) {
+    console.error('Error cargando database.json:', e);
+  }
+}
+loadDatabase();
+
+const rooms = {};
 const HERO_COLORS = ['#2563eb', '#dc2626', '#16a34a', '#d97706'];
 
-function createRoomState() {
+function createRoomState(hostSocketId) {
   return {
-    players: 1,
-    threat: { 
-      name: 'Plan Principal', 
-      baseThreat: 1,     // Amenaza inicial por jugador
-      targetBase: 7,     // Umbral por jugador
-      baseThreshold: 7,  // Alias para mantener sincronía con el frontend
-      current: 1, 
-      target: 7 
-    },
-    villains: [{ id: 'v1', name: 'Villano Principal', baseHp: 14, hp: 14 }],
-    heroes: [{ id: 'h1', name: 'Héroe 1', hp: 10, maxHp: 10, color: HERO_COLORS[0] }]
+    hostId: hostSocketId, // Guardamos el ID del creador de la sala
+    selectedVillain: null,
+    threat: { name: 'Plan Principal', baseThreat: 1, targetBase: 7, current: 1, target: 7 },
+    villains: [{ id: 'v1', name: 'Seleccionar Villano', baseHp: 10, hp: 10 }],
+    sideSchemes: [],
+    heroes: []
   };
 }
 
@@ -39,125 +48,83 @@ io.on('connection', (socket) => {
     socket.join(code);
     socket.roomCode = code;
 
-    if (!rooms[code]) rooms[code] = createRoomState();
+    let isHost = false;
 
-    const threat = rooms[code].threat;
-    
-    // CORRECCIÓN CLAVE: Respetar el valor actual si ya existe
-    const activeThreshold = threat.targetBase !== undefined ? threat.targetBase : (threat.baseThreshold !== undefined ? threat.baseThreshold : 7);
-    threat.targetBase = activeThreshold;
-    threat.baseThreshold = activeThreshold;
-    threat.target = activeThreshold * rooms[code].players;
+    // Si la sala no existe, el usuario actual pasa a ser el Host
+    if (!rooms[code]) {
+      rooms[code] = createRoomState(socket.id);
+      isHost = true;
+    } else if (rooms[code].hostId === socket.id) {
+      isHost = true;
+    }
 
-    io.to(code).emit('update_room', rooms[code]);
-  });
+    const room = rooms[code];
 
-  // Cambiar jugadores (Sin límite superior)
-  socket.on('update_players', ({ players }) => {
-    const code = socket.roomCode;
-    if (!code || !rooms[code]) return;
-
-    const newPlayers = Math.max(1, parseInt(players) || 1);
-    rooms[code].players = newPlayers;
-
-    const threat = rooms[code].threat;
-    const thresholdBase = threat.targetBase || threat.baseThreshold || 7;
-
-    // Recalcular Umbral Total y Amenaza Inicial
-    threat.target = thresholdBase * newPlayers;
-    threat.current = (threat.baseThreat || 1) * newPlayers;
-
-    // Recalcular Vida de Villanos
-    rooms[code].villains.forEach(v => {
-      v.hp = (v.baseHp || 10) * newPlayers;
+    // Enviar al cliente si es el anfitrión y el catálogo para la modal
+    socket.emit('init_session', { 
+      isHost: isHost, 
+      database: isHost ? Object.values(presetDatabase) : [] 
     });
 
-    io.to(code).emit('update_room', rooms[code]);
+    // Notificar actualización de estado global de la sala
+    io.to(code).emit('update_room', room);
   });
 
-  // Gestor del Plan Principal (Amenaza y Umbral)
-  socket.on('update_threat', ({ delta, name, baseThreat, targetBase, baseThreshold }) => {
+  // Solo el Host puede emitir la selección del preset
+  socket.on('select_preset', ({ presetKey }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
 
-    const threat = rooms[code].threat;
-    const players = rooms[code].players || 1;
+    const room = rooms[code];
 
-    // Cambiar Amenaza Base por Jugador
-    if (baseThreat !== undefined) {
-      const newBase = Math.max(0, parseInt(baseThreat) || 0);
-      threat.baseThreat = newBase;
-      threat.current = newBase * players;
+    // Control de seguridad: Verificar que quien envía la orden sea el Host
+    if (room.hostId !== socket.id) {
+      return socket.emit('error_message', 'Solo el anfitrión de la sala puede seleccionar el villano.');
     }
 
-    // Cambiar Umbral Base por Jugador
-    const rawThreshold = targetBase !== undefined ? targetBase : baseThreshold;
-    if (rawThreshold !== undefined) {
-      const newThreshold = Math.max(1, parseInt(rawThreshold) || 1);
-      threat.targetBase = newThreshold;
-      threat.baseThreshold = newThreshold;
-      threat.target = newThreshold * players;
+    const preset = presetDatabase[presetKey];
+    if (!preset) return;
+
+    room.selectedVillain = presetKey;
+
+    // Cargar Plan Principal
+    room.threat.name = preset.mainScheme.name;
+    room.threat.baseThreat = preset.mainScheme.baseThreat;
+    room.threat.targetBase = preset.mainScheme.targetBase;
+    room.threat.current = preset.mainScheme.baseThreat * (room.heroes.length || 1);
+    room.threat.target = preset.mainScheme.targetBase * (room.heroes.length || 1);
+
+    // Cargar Villano Principal
+    if (room.villains.length > 0) {
+      room.villains[0].name = preset.villainName;
+      room.villains[0].baseHp = preset.baseHp;
+      room.villains[0].hp = preset.baseHp * (room.heroes.length || 1);
     }
 
-    // Incrementar / Decrementar amenaza en partida
-    if (delta !== undefined) {
-      threat.current = Math.max(0, threat.current + delta);
-    }
+    // Cargar Planes Secundarios disponibles del escenario
+    room.sideSchemes = preset.sideSchemes || [];
 
-    // Cambiar nombre del plan
-    if (name !== undefined) {
-      threat.name = name;
-    }
-
-    io.to(code).emit('update_room', rooms[code]);
+    io.to(code).emit('update_room', room);
   });
 
-  // Gestor de Villanos
-  socket.on('update_villain', ({ action, index, delta, name, baseHp }) => {
+  socket.on('disconnect', () => {
+    // Si el host se desconecta, se recalcula el host con otro integrante de la sala
     const code = socket.roomCode;
-    if (!code || !rooms[code]) return;
-    const villains = rooms[code].villains;
-    const players = rooms[code].players || 1;
-
-    if (action === 'add') {
-      villains.push({ id: 'v_' + Date.now(), name: `Villano ${villains.length + 1}`, baseHp: 10, hp: 10 * players });
-    } else if (action === 'remove' && villains.length > 1) {
-      villains.splice(index, 1);
-    } else if (action === 'change_hp' && villains[index]) {
-      villains[index].hp = Math.max(0, villains[index].hp + delta);
-    } else if (action === 'change_name' && villains[index]) {
-      villains[index].name = name;
-    } else if (action === 'change_base_hp' && villains[index]) {
-      const newBase = Math.max(1, parseInt(baseHp) || 1);
-      villains[index].baseHp = newBase;
-      villains[index].hp = newBase * players;
+    if (code && rooms[code] && rooms[code].hostId === socket.id) {
+      const clients = io.sockets.adapter.rooms.get(code);
+      if (clients && clients.size > 0) {
+        const newHostId = Array.from(clients)[0];
+        rooms[code].hostId = newHostId;
+        io.to(newHostId).emit('init_session', { 
+          isHost: true, 
+          database: Object.values(presetDatabase) 
+        });
+      } else {
+        delete rooms[code];
+      }
     }
-
-    io.to(code).emit('update_room', rooms[code]);
   });
-
-  // Gestor de Héroes (Límite máximo de 4 héroes)
-  socket.on('update_hero', ({ action, index, delta, name }) => {
-    const code = socket.roomCode;
-    if (!code || !rooms[code]) return;
-    const heroes = rooms[code].heroes;
-
-    if (action === 'add' && heroes.length < 4) {
-      const idx = heroes.length;
-      heroes.push({ id: 'h_' + Date.now(), name: `Héroe ${idx + 1}`, hp: 10, maxHp: 10, color: HERO_COLORS[idx % HERO_COLORS.length] });
-    } else if (action === 'remove' && heroes.length > 0) {
-      heroes.splice(index, 1);
-      heroes.forEach((h, i) => h.color = HERO_COLORS[i % HERO_COLORS.length]);
-    } else if (action === 'change_hp' && heroes[index]) {
-      heroes[index].hp = Math.max(0, heroes[index].hp + delta);
-    } else if (action === 'change_name' && heroes[index]) {
-      heroes[index].name = name;
-    }
-
-    io.to(code).emit('update_room', rooms[code]);
-  });
-
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Servidor activo en puerto ${PORT}`));
+server.listen(PORT, () => console.log(`Servidor iniciado en puerto ${PORT}`));
