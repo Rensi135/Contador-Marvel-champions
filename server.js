@@ -74,37 +74,9 @@ function loadDatabase() {
             return (max.match(/\d+/) && !max.includes('-1')) || base.match(/\d+/) || esc.match(/\d+/);
           };
 
-          // CASO ESPECIAL: Grupo de Demolición (Cargamos todos los planes exactos sin omitir ninguno)
-          if (set.set_code === 'wrecking_crew') {
-            const formattedSchemes = [];
-
-            schemes.forEach(schemeCard => {
-              const rawBaseThreat = schemeCard.base_threat !== undefined ? schemeCard.base_threat : 1;
-              const threatBase = parseNumeric(rawBaseThreat, 1);
-              const rawThreshold = schemeCard.threat_maxima || schemeCard.threshold || 7;
-              const threatMax = parseNumeric(rawThreshold, 7);
-
-              formattedSchemes.push({
-                name: schemeCard.name || 'Plan Principal',
-                stage: schemeCard.stage || schemeCard.stage_code || '',
-                baseThreat: threatBase,
-                baseThreshold: threatMax,
-                current: threatBase
-              });
-            });
-
-            presetDatabase[set.set_code] = {
-              key: set.set_code,
-              villainName: villainsList[0].name,
-              villainsList: villainsList,
-              mainSchemes: formattedSchemes
-            };
-            return;
-          }
-
-          // RESTO DE ESCENARIOS NORMALES
-          let selectedSchemes = [];
           let validScheme = null;
+
+          // Búsqueda secuencial estricta: 1B, luego 2B, 3B...
           for (let stageNum = 1; stageNum <= 5; stageNum++) {
             const candidate = schemes.find(s => {
               const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
@@ -123,54 +95,50 @@ function loadDatabase() {
           if (!validScheme) {
             validScheme = schemes.find(s => String(s.stage || '').toUpperCase().includes('B')) || schemes[0] || {};
           }
-          selectedSchemes = [validScheme];
 
-          const formattedSchemes = selectedSchemes.map(mainScheme => {
-            const rawBaseThreat = mainScheme.base_threat !== undefined 
-              ? mainScheme.base_threat 
-              : (mainScheme.threat !== undefined ? mainScheme.threat : mainScheme.starting_threat);
-            const threatBase = parseNumeric(rawBaseThreat, 1);
+          const mainScheme = validScheme;
 
-            let rawThreshold = undefined;
-            const possibleThresholdKeys = [
-              'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
-              'threat_fixed', 'max_threat', 'target', 'target_base', 
-              'threshold', 'fixed_threat', 'threat_star', 'threat_target'
-            ];
+          const rawBaseThreat = mainScheme.base_threat !== undefined 
+            ? mainScheme.base_threat 
+            : (mainScheme.threat !== undefined ? mainScheme.threat : mainScheme.starting_threat);
+          const threatBase = parseNumeric(rawBaseThreat, 1);
 
-            for (const key of possibleThresholdKeys) {
-              if (mainScheme[key] !== undefined && mainScheme[key] !== null && String(mainScheme[key]).match(/\d+/)) {
-                rawThreshold = mainScheme[key];
-                break;
-              }
+          let rawThreshold = undefined;
+          const possibleThresholdKeys = [
+            'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
+            'threat_fixed', 'max_threat', 'target', 'target_base', 
+            'threshold', 'fixed_threat', 'threat_star', 'threat_target'
+          ];
+
+          for (const key of possibleThresholdKeys) {
+            if (mainScheme[key] !== undefined && mainScheme[key] !== null && String(mainScheme[key]).match(/\d+/)) {
+              rawThreshold = mainScheme[key];
+              break;
             }
+          }
 
-            if (rawThreshold === undefined) {
-              const dynamicKey = Object.keys(mainScheme).find(k => {
-                const lower = k.toLowerCase();
-                return lower.includes('max') || lower.includes('target') || lower.includes('threshold') || lower.includes('limite');
-              });
-              if (dynamicKey) {
-                rawThreshold = mainScheme[dynamicKey];
-              }
+          if (rawThreshold === undefined) {
+            const dynamicKey = Object.keys(mainScheme).find(k => {
+              const lower = k.toLowerCase();
+              return lower.includes('max') || lower.includes('target') || lower.includes('threshold') || lower.includes('limite');
+            });
+            if (dynamicKey) {
+              rawThreshold = mainScheme[dynamicKey];
             }
+          }
 
-            const threatMax = parseNumeric(rawThreshold, 7);
-
-            return {
-              name: mainScheme.name || 'Plan Principal',
-              stage: mainScheme.stage || mainScheme.stage_code || '',
-              baseThreat: threatBase,
-              baseThreshold: threatMax,
-              current: threatBase
-            };
-          });
+          const threatMax = parseNumeric(rawThreshold, 7);
 
           presetDatabase[set.set_code] = {
             key: set.set_code,
             villainName: villainsList[0].name,
             villainsList: villainsList,
-            mainSchemes: formattedSchemes
+            mainScheme: {
+              name: mainScheme.name || 'Plan Principal',
+              stage: mainScheme.stage || mainScheme.stage_code || '',
+              baseThreat: threatBase,
+              baseThreshold: threatMax
+            }
           };
         }
       });
@@ -244,13 +212,13 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    room.schemes = (preset.mainSchemes || []).map(s => ({
-      name: s.name,
-      stage: s.stage,
-      baseThreat: s.baseThreat,
-      baseThreshold: s.baseThreshold,
-      current: s.baseThreat * playerCount
-    }));
+    room.schemes = [{
+      name: preset.mainScheme.name,
+      stage: preset.mainScheme.stage,
+      baseThreat: preset.mainScheme.baseThreat,
+      baseThreshold: preset.mainScheme.baseThreshold,
+      current: preset.mainScheme.baseThreat * playerCount
+    }];
 
     room.villains = preset.villainsList.map((v, index) => ({
       id: `v_${index}_${Date.now()}`,
