@@ -25,32 +25,43 @@ function loadDatabase() {
       presetDatabase = {};
       const sets = {};
 
-      // Agrupamos las cartas por set_code para emparejar Villano y Plan Principal
+      // Agrupación flexible de cartas por set_code para emparejar Villano y Plan Principal
       cards.forEach(card => {
         if (!card.set_code) return;
-        if (!sets[card.set_code]) sets[card.set_code] = { set_code: card.set_code };
 
-        if (card.tipo_carta === 'Villano' && (card.stage === 'I' || card.stage === '1')) {
-          sets[card.set_code].villain = card;
-        } else if (card.tipo_carta === 'Plan Principal' && (card.stage === '1A' || card.stage === 'A')) {
-          sets[card.set_code].mainScheme = card;
+        const code = card.set_code.toLowerCase().trim();
+        if (!sets[code]) sets[code] = { set_code: code };
+
+        const tipo = (card.tipo_carta || card.type_code || '').toLowerCase();
+
+        // Asignar villano si aún no existe para este set
+        if ((tipo.includes('villano') || tipo.includes('villain')) && !sets[code].villain) {
+          sets[code].villain = card;
+        } 
+        // Asignar plan principal si aún no existe para este set
+        else if ((tipo.includes('plan principal') || tipo.includes('main_scheme')) && !sets[code].mainScheme) {
+          sets[code].mainScheme = card;
         }
       });
 
-      // Procesamos y estructuramos cada escenario encontrado
+      // Procesamos y estructuramos cada escenario encontrado de forma robusta
       Object.values(sets).forEach(set => {
-        if (set.villain && set.mainScheme) {
+        if (set.villain) {
           const healthMatch = set.villain.health ? String(set.villain.health).match(/\d+/) : null;
-          const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : 10;
+          const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(set.villain.health, 10) || 10);
+
+          const mainScheme = set.mainScheme || {};
+          const threatBase = parseInt(mainScheme.base_threat, 10) || 1;
+          const threatMax = parseInt(mainScheme.threat_maxima, 10) || parseInt(mainScheme.escalation_threat, 10) || 7;
 
           presetDatabase[set.set_code] = {
             key: set.set_code,
-            villainName: set.villain.name,
+            villainName: set.villain.name || 'Villano Sin Nombre',
             baseHp: baseHp,
             mainScheme: {
-              name: set.mainScheme.name,
-              baseThreat: parseInt(set.mainScheme.base_threat, 10) || 1,
-              baseThreshold: parseInt(set.mainScheme.threat_maxima, 10) || 7
+              name: mainScheme.name || 'Plan Principal',
+              baseThreat: threatBase,
+              baseThreshold: threatMax
             }
           };
         }
