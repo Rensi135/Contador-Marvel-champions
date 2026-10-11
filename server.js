@@ -1,5 +1,5 @@
 const express = require('express');
-const http = http = require('http');
+const http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const path = require('path');
@@ -10,14 +10,16 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.static('public'));
 
-// Apuntamos al nuevo archivo JSON de la base de datos
-const dbPath = path.join(__dirname, 'data', 'villanos_y_planes.json');
+// Ruta a tu archivo JSON de villanos y planes en la raíz del proyecto
+const dbPath = path.join(__dirname, 'villanos_y_planes');
 let presetDatabase = {};
 
 function loadDatabase() {
   try {
-    if (fs.existsSync(dbPath)) {
-      const rawData = fs.readFileSync(dbPath, 'utf8');
+    const targetPath = fs.existsSync(dbPath) ? dbPath : path.join(__dirname, 'villanos_y_planes.json');
+    
+    if (fs.existsSync(targetPath)) {
+      const rawData = fs.readFileSync(targetPath, 'utf8');
       const cards = JSON.parse(rawData);
       
       presetDatabase = {};
@@ -38,7 +40,6 @@ function loadDatabase() {
       // Procesamos y estructuramos cada escenario encontrado
       Object.values(sets).forEach(set => {
         if (set.villain && set.mainScheme) {
-          // Extraemos el número de la vida base (ej: "12 (por jugador)" -> 12)
           const healthMatch = set.villain.health ? String(set.villain.health).match(/\d+/) : null;
           const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : 10;
 
@@ -55,22 +56,21 @@ function loadDatabase() {
         }
       });
 
-      console.log(`Base de datos cargada: ${Object.keys(presetDatabase).length} escenarios estructurados desde villanos_y_planes.json.`);
+      console.log(`Base de datos cargada: ${Object.keys(presetDatabase).length} escenarios estructurados.`);
     } else {
-      console.warn('No se encontró el archivo villanos_y_planes.json en la ruta data/');
+      console.warn('No se encontró el archivo villanos_y_planes en la ruta principal.');
     }
   } catch (e) {
-    console.error('Error cargando villanos_y_planes.json:', e);
+    console.error('Error cargando villanos_y_planes:', e);
   }
 }
 loadDatabase();
 
 const rooms = {};
-const HERO_COLORS = ['#2563eb', '#dc2626', '#16a34a', '#d97706'];
 
 function createRoomState(hostSocketId) {
   return {
-    hostId: hostSocketId, // Guardamos el ID del creador de la sala
+    hostId: hostSocketId,
     selectedVillain: null,
     players: 1,
     threat: { 
@@ -87,7 +87,6 @@ function createRoomState(hostSocketId) {
 
 io.on('connection', (socket) => {
 
-  // 1. UNIRSE A LA SALA
   socket.on('join_room', ({ roomCode }) => {
     const code = roomCode ? roomCode.toUpperCase() : 'MARV';
     if (socket.roomCode) socket.leave(socket.roomCode);
@@ -97,7 +96,6 @@ io.on('connection', (socket) => {
 
     let isHost = false;
 
-    // Si la sala no existe, el usuario actual pasa a ser el Host
     if (!rooms[code]) {
       rooms[code] = createRoomState(socket.id);
       isHost = true;
@@ -107,24 +105,20 @@ io.on('connection', (socket) => {
 
     const room = rooms[code];
 
-    // Enviar al cliente si es el anfitrión y el catálogo para la modal
     socket.emit('init_session', { 
       isHost: isHost, 
       database: isHost ? Object.values(presetDatabase) : [] 
     });
 
-    // Notificar actualización de estado global de la sala
     io.to(code).emit('update_room', room);
   });
 
-  // 2. SELECCIÓN DE PRESET DE ESCENARIO
   socket.on('select_preset', ({ presetKey }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
 
     const room = rooms[code];
 
-    // Control de seguridad: Verificar que quien envía la orden sea el Host
     if (room.hostId !== socket.id) {
       return socket.emit('error_message', 'Solo el anfitrión de la sala puede seleccionar el villano.');
     }
@@ -135,26 +129,20 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Cargar Plan Principal
     room.threat.name = preset.mainScheme.name;
     room.threat.baseThreat = preset.mainScheme.baseThreat || 1;
     room.threat.baseThreshold = preset.mainScheme.baseThreshold || 7;
     room.threat.current = room.threat.baseThreat * playerCount;
 
-    // Cargar Villano Principal
     if (room.villains.length > 0) {
       room.villains[0].name = preset.villainName;
       room.villains[0].baseHp = preset.baseHp;
       room.villains[0].hp = preset.baseHp * playerCount;
     }
 
-    // Cargar Planes Secundarios disponibles del escenario
-    room.sideSchemes = preset.sideSchemes || [];
-
     io.to(code).emit('update_room', room);
   });
 
-  // 3. CAMBIO EN EL NÚMERO DE JUGADORES
   socket.on('update_players', ({ players }) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -163,7 +151,6 @@ io.on('connection', (socket) => {
     const newCount = Math.max(1, parseInt(players) || 1);
     room.players = newCount;
 
-    // Recalcular vida de los villanos en función del nuevo número de jugadores
     room.villains.forEach(v => {
       v.hp = (v.baseHp || 10) * newCount;
     });
@@ -171,7 +158,6 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
-  // 4. ACTUALIZACIÓN DEL PLAN PRINCIPAL (AMENAZA)
   socket.on('update_threat', (data) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -194,7 +180,6 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
-  // 5. GESTIÓN Y MODIFICACIÓN DE VILLANOS
   socket.on('update_villain', (data) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -244,7 +229,6 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
-  // 6. DESCONEXIÓN
   socket.on('disconnect', () => {
     const code = socket.roomCode;
     if (code && rooms[code] && rooms[code].hostId === socket.id) {
