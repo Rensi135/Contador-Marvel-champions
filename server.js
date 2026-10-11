@@ -145,6 +145,7 @@ function loadDatabase() {
             rawVillains: set.villainsListRaw, 
             rawSchemes: set.schemesList,      
             isFixedTotalThreat: isApocalypse,
+            isMansionAttack: set.set_code === 'mansion_attack', // Marcador para Ataque a la Mansión
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
               stage: mainScheme.stage || mainScheme.stage_code || '1A',
@@ -172,6 +173,7 @@ function createRoomState(hostSocketId) {
     players: 1,
     schemes: [{ name: 'Plan Principal', stage: '', baseThreat: 1, baseThreshold: 7, current: 1 }],
     villains: [{ id: 'v1', name: 'Seleccionar Villano', baseHp: 10, hp: 10 }],
+    usedMansionSchemes: [], // Historial de planes 2B ya utilizados en mansion_attack
     sideSchemes: [],
     heroes: []
   };
@@ -222,6 +224,7 @@ io.on('connection', (socket) => {
     if (!preset) return;
 
     room.selectedVillain = presetKey;
+    room.usedMansionSchemes = []; // Reiniciamos el registro de planes 2B usados al cambiar de escenario
     const playerCount = room.players || 1;
 
     room.villains = preset.villainsList.map((v, index) => {
@@ -316,10 +319,35 @@ io.on('connection', (socket) => {
       const currentStage = String(scheme.stage || '1A').toUpperCase();
       const targetStage = getNextSchemeStage(currentStage);
 
-      let nextCard = preset.rawSchemes.find(s => {
-        const sStage = String(s.stage || s.stage_code || '').toUpperCase();
-        return sStage === targetStage;
-      });
+      let nextCard = null;
+
+      // REGLA MANSION_ATTACK: Si se avanza a 2B de forma aleatoria sin repetir
+      if (preset.isMansionAttack && targetStage === '2B') {
+        const available2BCards = preset.rawSchemes.filter(s => {
+          const sStage = String(s.stage || s.stage_code || '').toUpperCase();
+          const cardName = s.name || '';
+          return sStage === '2B' && !room.usedMansionSchemes.includes(cardName);
+        });
+
+        if (available2BCards.length > 0) {
+          const randomIndex = Math.floor(Math.random() * available2BCards.length);
+          nextCard = available2BCards[randomIndex];
+          room.usedMansionSchemes.push(nextCard.name);
+        } else {
+          // Si ya se usaron todos, resetea el ciclo
+          const all2BCards = preset.rawSchemes.filter(s => String(s.stage || s.stage_code || '').toUpperCase() === '2B');
+          if (all2BCards.length > 0) {
+            const randomIndex = Math.floor(Math.random() * all2BCards.length);
+            nextCard = all2BCards[randomIndex];
+            room.usedMansionSchemes = [nextCard.name];
+          }
+        }
+      } else {
+        nextCard = preset.rawSchemes.find(s => {
+          const sStage = String(s.stage || s.stage_code || '').toUpperCase();
+          return sStage === targetStage;
+        });
+      }
 
       if (!nextCard && preset.rawSchemes.length > 1) {
         const currentIndex = preset.rawSchemes.findIndex(s => String(s.stage || s.stage_code || '').toUpperCase() === currentStage);
