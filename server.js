@@ -46,18 +46,36 @@ function loadDatabase() {
             });
           }
         } 
-        else if ((tipo.includes('plan principal') || tipo.includes('main_scheme')) && !sets[code].mainScheme) {
-          sets[code].mainScheme = card;
+        else if ((tipo.includes('plan principal') || tipo.includes('main_scheme'))) {
+          const stage = String(card.stage || card.stage_code || '').toUpperCase();
+          if (!sets[code].mainScheme || stage.includes('1') || stage.includes('A')) {
+            sets[code].mainScheme = card;
+          }
         }
       });
+
+      // Función auxiliar para extraer números seguros de los campos del plan
+      const parseNumeric = (val, fallback) => {
+        if (val === undefined || val === null) return fallback;
+        const match = String(val).match(/\d+/);
+        return match ? parseInt(match[0], 10) : fallback;
+      };
 
       Object.values(sets).forEach(set => {
         const villainsList = Array.from(set.villainsMap.values());
 
         if (villainsList.length > 0) {
           const mainScheme = set.mainScheme || {};
-          const threatBase = parseInt(mainScheme.base_threat, 10) || 1;
-          const threatMax = parseInt(mainScheme.threat_maxima, 10) || parseInt(mainScheme.escalation_threat, 10) || 7;
+
+          // Extracción inteligente de amenaza base
+          const rawBaseThreat = mainScheme.base_threat !== undefined ? mainScheme.base_threat : mainScheme.threat;
+          const threatBase = parseNumeric(rawBaseThreat, 1);
+
+          // Extracción inteligente del umbral (threat_maxima, escalation_threat, etc.)
+          const rawThreshold = mainScheme.threat_maxima !== undefined 
+            ? mainScheme.threat_maxima 
+            : (mainScheme.escalation_threat !== undefined ? mainScheme.escalation_threat : mainScheme.base_threat_fixed);
+          const threatMax = parseNumeric(rawThreshold, 7);
 
           presetDatabase[set.set_code] = {
             key: set.set_code,
@@ -143,10 +161,10 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Cargar Plan Principal
+    // Cargar Plan Principal con los valores reales del JSON
     room.threat.name = preset.mainScheme.name;
-    room.threat.baseThreat = preset.mainScheme.baseThreat || 1;
-    room.threat.baseThreshold = preset.mainScheme.baseThreshold || 7;
+    room.threat.baseThreat = preset.mainScheme.baseThreat;
+    room.threat.baseThreshold = preset.mainScheme.baseThreshold;
     room.threat.current = preset.mainScheme.baseThreat * playerCount;
 
     // Cargar los villanos únicos correspondientes (1 de cada uno)
