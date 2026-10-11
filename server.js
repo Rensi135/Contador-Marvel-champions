@@ -10,7 +10,6 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.static('public'));
 
-// Ruta a tu archivo JSON de villanos y planes en la raíz del proyecto
 const dbPath = path.join(__dirname, 'villanos_y_planes');
 let presetDatabase = {};
 
@@ -25,39 +24,43 @@ function loadDatabase() {
       presetDatabase = {};
       const sets = {};
 
-      // Agrupación flexible de cartas por set_code para emparejar Villano y Plan Principal
       cards.forEach(card => {
         if (!card.set_code) return;
 
         const code = card.set_code.toLowerCase().trim();
-        if (!sets[code]) sets[code] = { set_code: code };
+        if (!sets[code]) sets[code] = { set_code: code, villains: [] };
 
         const tipo = (card.tipo_carta || card.type_code || '').toLowerCase();
 
-        // Asignar villano si aún no existe para este set
-        if ((tipo.includes('villano') || tipo.includes('villain')) && !sets[code].villain) {
-          sets[code].villain = card;
+        // Recogemos TODOS los villanos del set (ej: los 4 jinetes)
+        if (tipo.includes('villano') || tipo.includes('villain')) {
+          sets[code].villains.push(card);
         } 
-        // Asignar plan principal si aún no existe para este set
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme')) && !sets[code].mainScheme) {
           sets[code].mainScheme = card;
         }
       });
 
-      // Procesamos y estructuramos cada escenario encontrado de forma robusta
       Object.values(sets).forEach(set => {
-        if (set.villain) {
-          const healthMatch = set.villain.health ? String(set.villain.health).match(/\d+/) : null;
-          const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(set.villain.health, 10) || 10);
-
+        if (set.villains && set.villains.length > 0) {
           const mainScheme = set.mainScheme || {};
           const threatBase = parseInt(mainScheme.base_threat, 10) || 1;
           const threatMax = parseInt(mainScheme.threat_maxima, 10) || parseInt(mainScheme.escalation_threat, 10) || 7;
 
+          // Mapeamos cada villano del conjunto extrayendo su vida base
+          const mappedVillains = set.villains.map(v => {
+            const healthMatch = v.health ? String(v.health).match(/\d+/) : null;
+            const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(v.health, 10) || 10);
+            return {
+              name: v.name || 'Villano',
+              baseHp: baseHp
+            };
+          });
+
           presetDatabase[set.set_code] = {
             key: set.set_code,
-            villainName: set.villain.name || 'Villano Sin Nombre',
-            baseHp: baseHp,
+            villainName: mappedVillains[0].name, // por compatibilidad con el buscador
+            villainsList: mappedVillains,       // lista completa de villanos del set
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
               baseThreat: threatBase,
@@ -68,8 +71,6 @@ function loadDatabase() {
       });
 
       console.log(`Base de datos cargada: ${Object.keys(presetDatabase).length} escenarios estructurados.`);
-    } else {
-      console.warn('No se encontró el archivo villanos_y_planes en la ruta principal.');
     }
   } catch (e) {
     console.error('Error cargando villanos_y_planes:', e);
@@ -140,16 +141,19 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
+    // Cargar Plan Principal
     room.threat.name = preset.mainScheme.name;
     room.threat.baseThreat = preset.mainScheme.baseThreat || 1;
     room.threat.baseThreshold = preset.mainScheme.baseThreshold || 7;
-    room.threat.current = room.threat.baseThreat * playerCount;
+    room.threat.current = preset.mainScheme.baseThreat * playerCount;
 
-    if (room.villains.length > 0) {
-      room.villains[0].name = preset.villainName;
-      room.villains[0].baseHp = preset.baseHp;
-      room.villains[0].hp = preset.baseHp * playerCount;
-    }
+    // Cargar TODOS los villanos del conjunto seleccionado
+    room.villains = preset.villainsList.map((v, index) => ({
+      id: `v_${index}_${Date.now()}`,
+      name: v.name,
+      baseHp: v.baseHp,
+      hp: v.baseHp * playerCount
+    }));
 
     io.to(code).emit('update_room', room);
   });
@@ -223,7 +227,7 @@ io.on('connection', (socket) => {
         const newIdx = room.villains.length + 1;
         const defaultBase = 10;
         room.villains.push({
-          id: `v${Date.now()}`,
+          id: `v_${Date.now()}`,
           name: `Esbirro / Villano ${newIdx}`,
           baseHp: defaultBase,
           hp: defaultBase * (room.players || 1)
