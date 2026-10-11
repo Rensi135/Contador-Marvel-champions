@@ -32,7 +32,7 @@ function loadDatabase() {
 
         const tipo = (card.tipo_carta || card.type_code || '').toLowerCase();
 
-        // Guardamos solo una versión por cada nombre de villano distinto dentro del set
+        // 1. Guardamos solo una versión por cada nombre de villano distinto dentro del set
         if (tipo.includes('villano') || tipo.includes('villain')) {
           const villainName = card.name ? card.name.trim() : 'Villano';
           
@@ -46,6 +46,7 @@ function loadDatabase() {
             });
           }
         } 
+        // 2. Guardamos la primera etapa de Plan Principal
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme'))) {
           const stage = String(card.stage || card.stage_code || '').toUpperCase();
           if (!sets[code].mainScheme || stage.includes('1') || stage.includes('A')) {
@@ -54,7 +55,7 @@ function loadDatabase() {
         }
       });
 
-      // Función auxiliar para extraer números seguros de los campos del plan
+      // Función auxiliar para extraer números de forma segura de cadenas o enteros
       const parseNumeric = (val, fallback) => {
         if (val === undefined || val === null) return fallback;
         const match = String(val).match(/\d+/);
@@ -67,14 +68,38 @@ function loadDatabase() {
         if (villainsList.length > 0) {
           const mainScheme = set.mainScheme || {};
 
-          // Extracción inteligente de amenaza base
-          const rawBaseThreat = mainScheme.base_threat !== undefined ? mainScheme.base_threat : mainScheme.threat;
+          // Extracción inteligente de amenaza base por jugador
+          const rawBaseThreat = mainScheme.base_threat !== undefined 
+            ? mainScheme.base_threat 
+            : (mainScheme.threat !== undefined ? mainScheme.threat : mainScheme.starting_threat);
           const threatBase = parseNumeric(rawBaseThreat, 1);
 
-          // Extracción inteligente del umbral (threat_maxima, escalation_threat, etc.)
-          const rawThreshold = mainScheme.threat_maxima !== undefined 
-            ? mainScheme.threat_maxima 
-            : (mainScheme.escalation_threat !== undefined ? mainScheme.escalation_threat : mainScheme.base_threat_fixed);
+          // Búsqueda exhaustiva del umbral / amenaza máxima en múltiples claves conocidas
+          let rawThreshold = undefined;
+          const possibleThresholdKeys = [
+            'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
+            'threat_fixed', 'max_threat', 'target', 'target_base', 
+            'threshold', 'fixed_threat', 'threat_star', 'threat_target'
+          ];
+
+          for (const key of possibleThresholdKeys) {
+            if (mainScheme[key] !== undefined && mainScheme[key] !== null) {
+              rawThreshold = mainScheme[key];
+              break;
+            }
+          }
+
+          // Si no se encuentra en las claves conocidas, busca dinámicamente cualquier propiedad con 'max', 'target', 'threshold' o 'limite'
+          if (rawThreshold === undefined) {
+            const dynamicKey = Object.keys(mainScheme).find(k => {
+              const lower = k.toLowerCase();
+              return lower.includes('max') || lower.includes('target') || lower.includes('threshold') || lower.includes('limite');
+            });
+            if (dynamicKey) {
+              rawThreshold = mainScheme[dynamicKey];
+            }
+          }
+
           const threatMax = parseNumeric(rawThreshold, 7);
 
           presetDatabase[set.set_code] = {
@@ -161,7 +186,7 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Cargar Plan Principal con los valores reales del JSON
+    // Cargar Plan Principal con los valores reales parsedos del JSON
     room.threat.name = preset.mainScheme.name;
     room.threat.baseThreat = preset.mainScheme.baseThreat;
     room.threat.baseThreshold = preset.mainScheme.baseThreshold;
@@ -233,54 +258,4 @@ io.on('connection', (socket) => {
         if (room.villains[index]) {
           const newBase = Math.max(1, parseInt(baseHp) || 1);
           room.villains[index].baseHp = newBase;
-          room.villains[index].hp = newBase * (room.players || 1);
-        }
-        break;
-
-      case 'change_name':
-        if (room.villains[index]) {
-          room.villains[index].name = name;
-        }
-        break;
-
-      case 'add':
-        const newIdx = room.villains.length + 1;
-        const defaultBase = 10;
-        room.villains.push({
-          id: `v_${Date.now()}`,
-          name: `Esbirro / Villano ${newIdx}`,
-          baseHp: defaultBase,
-          hp: defaultBase * (room.players || 1)
-        });
-        break;
-
-      case 'remove':
-        if (room.villains.length > 0 && index >= 0 && index < room.villains.length) {
-          room.villains.splice(index, 1);
-        }
-        break;
-    }
-
-    io.to(code).emit('update_room', room);
-  });
-
-  socket.on('disconnect', () => {
-    const code = socket.roomCode;
-    if (code && rooms[code] && rooms[code].hostId === socket.id) {
-      const clients = io.sockets.adapter.rooms.get(code);
-      if (clients && clients.size > 0) {
-        const newHostId = Array.from(clients)[0];
-        rooms[code].hostId = newHostId;
-        io.to(newHostId).emit('init_session', { 
-          isHost: true, 
-          database: Object.values(presetDatabase) 
-        });
-      } else {
-        delete rooms[code];
-      }
-    }
-  });
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Servidor iniciado en puerto ${PORT}`));
+          room.villains[index].
