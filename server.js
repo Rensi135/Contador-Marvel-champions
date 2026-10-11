@@ -299,8 +299,8 @@ io.on('connection', (socket) => {
     const getNextSchemeStage = (current) => {
       const cur = String(current || '1A').trim().toUpperCase();
       
-      // Salto directo de 1A -> 2B en Ataque a la Mansión (evitando 2A)
-      if (preset.isMansionAttack && cur === '1A') {
+      // Si es Ataque a la Mansión, forzamos que el siguiente salto directo desde cualquier etapa 1 sea 2B (omitiendo 2A)
+      if (preset.isMansionAttack) {
         return '2B';
       }
 
@@ -327,7 +327,7 @@ io.on('connection', (socket) => {
       let nextCard = null;
 
       // REGLA MANSION_ATTACK: Elección aleatoria entre las cartas 2B sin repetir
-      if (preset.isMansionAttack && targetStage === '2B') {
+      if (preset.isMansionAttack) {
         const available2BCards = preset.rawSchemes.filter(s => {
           const sStage = String(s.stage || s.stage_code || '').toUpperCase();
           const cardName = s.name || '';
