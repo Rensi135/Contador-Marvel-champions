@@ -46,12 +46,17 @@ function loadDatabase() {
             });
           }
         } 
-        // 2. Guardamos de forma inteligente el Plan Principal priorizando la etapa B (ej. 1B, 2B) que tiene los datos reales
+        // 2. Priorizamos la primera etapa (Etapa 1 / 1B) para extraer la cara inicial del Plan Principal
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme'))) {
           const stage = String(card.stage || card.stage_code || '').toUpperCase();
-          const hasThreshold = card.threat_maxima || card.escalation_threat || card.base_threat || card.base_threat_fixed;
+          const currentStage = sets[code].mainScheme ? String(sets[code].mainScheme.stage || '').toUpperCase() : '';
 
-          if (!sets[code].mainScheme || stage.includes('B') || (hasThreshold && !String(sets[code].mainScheme.threat_maxima || '').match(/\d+/))) {
+          // Si no hay plan asignado, o la carta actual es etapa 1B, o es etapa 1 y el actual no es 1B
+          if (
+            !sets[code].mainScheme ||
+            stage === '1B' || stage === '1' ||
+            (stage.includes('1') && !currentStage.includes('1B'))
+          ) {
             sets[code].mainScheme = card;
           }
         }
@@ -91,7 +96,6 @@ function loadDatabase() {
             }
           }
 
-          // Si no se encuentra en las claves conocidas, busca dinámicamente cualquier propiedad con 'max', 'target', 'threshold' o 'limite'
           if (rawThreshold === undefined) {
             const dynamicKey = Object.keys(mainScheme).find(k => {
               const lower = k.toLowerCase();
@@ -106,11 +110,11 @@ function loadDatabase() {
 
           presetDatabase[set.set_code] = {
             key: set.set_code,
-            villainName: villainsList[0].name, // por compatibilidad con el buscador
-            villainsList: villainsList,        // 1 tarjeta por cada villano único distinto
+            villainName: villainsList[0].name,
+            villainsList: villainsList,
             mainScheme: {
-              name: mainScheme.name || 'Plan Principal',
-              stage: mainScheme.stage || mainScheme.stage_code || '', // <-- Capturamos la etapa (stage) correctamente
+              name: mainScheme.name || 'Plan Principal', // Mantiene el nombre exacto de la carta (ej. "Bajo asedio")
+              stage: mainScheme.stage || mainScheme.stage_code || '',
               baseThreat: threatBase,
               baseThreshold: threatMax
             }
@@ -190,14 +194,14 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Cargar Plan Principal con los valores y la etapa (stage) reales del JSON
+    // Cargar Plan Principal con el nombre de la Etapa 1B
     room.threat.name = preset.mainScheme.name;
     room.threat.stage = preset.mainScheme.stage;
     room.threat.baseThreat = preset.mainScheme.baseThreat;
     room.threat.baseThreshold = preset.mainScheme.baseThreshold;
     room.threat.current = preset.mainScheme.baseThreat * playerCount;
 
-    // Cargar los villanos únicos correspondientes (1 de cada uno)
+    // Cargar los villanos únicos correspondientes
     room.villains = preset.villainsList.map((v, index) => ({
       id: `v_${index}_${Date.now()}`,
       name: v.name,
