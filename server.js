@@ -28,13 +28,23 @@ function loadDatabase() {
         if (!card.set_code) return;
 
         const code = card.set_code.toLowerCase().trim();
-        if (!sets[code]) sets[code] = { set_code: code, villains: [] };
+        if (!sets[code]) sets[code] = { set_code: code, villainsMap: new Map(), mainScheme: null };
 
         const tipo = (card.tipo_carta || card.type_code || '').toLowerCase();
 
-        // Recogemos TODOS los villanos del set (ej: los 4 jinetes)
+        // Guardamos solo una versión por cada nombre de villano distinto dentro del set
         if (tipo.includes('villano') || tipo.includes('villain')) {
-          sets[code].villains.push(card);
+          const villainName = card.name ? card.name.trim() : 'Villano';
+          
+          if (!sets[code].villainsMap.has(villainName)) {
+            const healthMatch = card.health ? String(card.health).match(/\d+/) : null;
+            const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(card.health, 10) || 10);
+
+            sets[code].villainsMap.set(villainName, {
+              name: villainName,
+              baseHp: baseHp
+            });
+          }
         } 
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme')) && !sets[code].mainScheme) {
           sets[code].mainScheme = card;
@@ -42,25 +52,17 @@ function loadDatabase() {
       });
 
       Object.values(sets).forEach(set => {
-        if (set.villains && set.villains.length > 0) {
+        const villainsList = Array.from(set.villainsMap.values());
+
+        if (villainsList.length > 0) {
           const mainScheme = set.mainScheme || {};
           const threatBase = parseInt(mainScheme.base_threat, 10) || 1;
           const threatMax = parseInt(mainScheme.threat_maxima, 10) || parseInt(mainScheme.escalation_threat, 10) || 7;
 
-          // Mapeamos cada villano del conjunto extrayendo su vida base
-          const mappedVillains = set.villains.map(v => {
-            const healthMatch = v.health ? String(v.health).match(/\d+/) : null;
-            const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(v.health, 10) || 10);
-            return {
-              name: v.name || 'Villano',
-              baseHp: baseHp
-            };
-          });
-
           presetDatabase[set.set_code] = {
             key: set.set_code,
-            villainName: mappedVillains[0].name, // por compatibilidad con el buscador
-            villainsList: mappedVillains,       // lista completa de villanos del set
+            villainName: villainsList[0].name, // por compatibilidad con el buscador
+            villainsList: villainsList,        // 1 tarjeta por cada villano único distinto
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
               baseThreat: threatBase,
@@ -147,7 +149,7 @@ io.on('connection', (socket) => {
     room.threat.baseThreshold = preset.mainScheme.baseThreshold || 7;
     room.threat.current = preset.mainScheme.baseThreat * playerCount;
 
-    // Cargar TODOS los villanos del conjunto seleccionado
+    // Cargar los villanos únicos correspondientes (1 de cada uno)
     room.villains = preset.villainsList.map((v, index) => ({
       id: `v_${index}_${Date.now()}`,
       name: v.name,
