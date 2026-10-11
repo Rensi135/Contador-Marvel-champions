@@ -27,12 +27,18 @@ function loadDatabase() {
       cards.forEach(card => {
         if (!card.set_code) return;
 
-        const code = card.set_code.toLowerCase().trim();
+        let code = card.set_code.toLowerCase().trim();
+
+        // Agrupación especial para El Grupo de Demolición (Wrecking Crew)
+        if (['wrecker', 'thunderball', 'piledriver', 'bulldozer'].includes(code)) {
+          code = 'wrecking_crew';
+        }
+
         if (!sets[code]) sets[code] = { set_code: code, villainsMap: new Map(), schemesList: [] };
 
         const tipo = (card.tipo_carta || card.type_code || '').toLowerCase();
 
-        // 1. Guardamos solo una versión por cada nombre de villano distinto dentro del set
+        // 1. Guardamos los villanos únicos dentro del set
         if (tipo.includes('villano') || tipo.includes('villain')) {
           const villainName = card.name ? card.name.trim() : 'Villano';
           
@@ -46,7 +52,7 @@ function loadDatabase() {
             });
           }
         } 
-        // 2. Acumulamos todas las cartas de plan principal del set
+        // 2. Acumulamos las cartas de plan principal
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme'))) {
           sets[code].schemesList.push(card);
         }
@@ -65,7 +71,6 @@ function loadDatabase() {
         if (villainsList.length > 0) {
           const schemes = set.schemesList || [];
 
-          // Función para comprobar si una carta de plan tiene amenaza válida (números reales, no vacíos ni -1)
           const hasValidThreat = (s) => {
             const max = String(s.threat_maxima || '');
             const base = String(s.base_threat || '');
@@ -75,7 +80,7 @@ function loadDatabase() {
 
           let validScheme = null;
 
-          // BÚSQUEDA SECUENCIAL ESTRICTA: 1B, luego 2B, luego 3B...
+          // Búsqueda secuencial estricta: 1B, luego 2B, 3B...
           for (let stageNum = 1; stageNum <= 5; stageNum++) {
             const candidate = schemes.find(s => {
               const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
@@ -87,25 +92,21 @@ function loadDatabase() {
             }
           }
 
-          // Si ninguna etapa numérica secuencial tiene amenaza, busca cualquier plan que sí la tenga
           if (!validScheme) {
             validScheme = schemes.find(s => hasValidThreat(s));
           }
 
-          // Si aun así ninguna tiene amenaza, recurre a la primera etapa B disponible o a la primera carta de plan
           if (!validScheme) {
             validScheme = schemes.find(s => String(s.stage || '').toUpperCase().includes('B')) || schemes[0] || {};
           }
 
           const mainScheme = validScheme;
 
-          // Extracción inteligente de amenaza base por jugador
           const rawBaseThreat = mainScheme.base_threat !== undefined 
             ? mainScheme.base_threat 
             : (mainScheme.threat !== undefined ? mainScheme.threat : mainScheme.starting_threat);
           const threatBase = parseNumeric(rawBaseThreat, 1);
 
-          // Búsqueda exhaustiva del umbral / amenaza máxima en múltiples claves conocidas
           let rawThreshold = undefined;
           const possibleThresholdKeys = [
             'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
@@ -135,7 +136,7 @@ function loadDatabase() {
           presetDatabase[set.set_code] = {
             key: set.set_code,
             villainName: villainsList[0].name,
-            villainsList: villainsList,
+            villainsList: villainsList, // Aquí se incluirán los 4 villanos juntos bajo 'wrecking_crew'
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
               stage: mainScheme.stage || mainScheme.stage_code || '',
@@ -224,6 +225,7 @@ io.on('connection', (socket) => {
     room.threat.baseThreshold = preset.mainScheme.baseThreshold;
     room.threat.current = preset.mainScheme.baseThreat * playerCount;
 
+    // Carga todos los villanos definidos para este set (los 4 en el caso del Grupo de Demolición)
     room.villains = preset.villainsList.map((v, index) => ({
       id: `v_${index}_${Date.now()}`,
       name: v.name,
