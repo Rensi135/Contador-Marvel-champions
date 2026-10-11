@@ -74,34 +74,76 @@ function loadDatabase() {
             return (max.match(/\d+/) && !max.includes('-1')) || base.match(/\d+/) || esc.match(/\d+/);
           };
 
-          let selectedSchemes = [];
-
+          // CASO ESPECIAL: Grupo de Demolición (vinculación uno a uno entre villanos y planes)
           if (set.set_code === 'wrecking_crew') {
-            selectedSchemes = schemes.filter(s => hasValidThreat(s) || String(s.stage || '').toUpperCase().includes('B'));
-          }
+            const formattedSchemes = [];
+            const pairedVillains = [];
 
-          if (selectedSchemes.length === 0) {
-            let validScheme = null;
-            for (let stageNum = 1; stageNum <= 5; stageNum++) {
-              const candidate = schemes.find(s => {
-                const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
-                return stageStr === `${stageNum}B` || stageStr === `${stageNum}`;
+            villainsList.forEach(v => {
+              let matchingScheme = schemes.find(s => {
+                const sName = (s.name || '').toLowerCase();
+                const vName = v.name.toLowerCase();
+                return sName.includes(vName) || vName.includes(sName);
               });
-              if (candidate && hasValidThreat(candidate)) {
-                validScheme = candidate;
-                break;
+
+              if (!matchingScheme && schemes.length > 0) {
+                matchingScheme = schemes.shift();
               }
-            }
 
-            if (!validScheme) {
-              validScheme = schemes.find(s => hasValidThreat(s));
-            }
+              if (!matchingScheme) {
+                matchingScheme = { name: v.name, stage: '1B', base_threat: 1, threat_maxima: '7' };
+              }
 
-            if (!validScheme) {
-              validScheme = schemes.find(s => String(s.stage || '').toUpperCase().includes('B')) || schemes[0] || {};
-            }
-            selectedSchemes = [validScheme];
+              const rawBaseThreat = matchingScheme.base_threat !== undefined 
+                ? matchingScheme.base_threat 
+                : (matchingScheme.threat !== undefined ? matchingScheme.threat : 1);
+              const threatBase = parseNumeric(rawBaseThreat, 1);
+
+              let rawThreshold = matchingScheme.threat_maxima || matchingScheme.threshold || 7;
+              const threatMax = parseNumeric(rawThreshold, 7);
+
+              formattedSchemes.push({
+                name: matchingScheme.name || v.name,
+                stage: matchingScheme.stage || matchingScheme.stage_code || '1B',
+                baseThreat: threatBase,
+                baseThreshold: threatMax,
+                current: threatBase
+              });
+
+              pairedVillains.push(v);
+            });
+
+            presetDatabase[set.set_code] = {
+              key: set.set_code,
+              villainName: villainsList[0].name,
+              villainsList: pairedVillains,
+              mainSchemes: formattedSchemes
+            };
+            return;
           }
+
+          // RESTO DE ESCENARIOS NORMALES
+          let selectedSchemes = [];
+          let validScheme = null;
+          for (let stageNum = 1; stageNum <= 5; stageNum++) {
+            const candidate = schemes.find(s => {
+              const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
+              return stageStr === `${stageNum}B` || stageStr === `${stageNum}`;
+            });
+            if (candidate && hasValidThreat(candidate)) {
+              validScheme = candidate;
+              break;
+            }
+          }
+
+          if (!validScheme) {
+            validScheme = schemes.find(s => hasValidThreat(s));
+          }
+
+          if (!validScheme) {
+            validScheme = schemes.find(s => String(s.stage || '').toUpperCase().includes('B')) || schemes[0] || {};
+          }
+          selectedSchemes = [validScheme];
 
           const formattedSchemes = selectedSchemes.map(mainScheme => {
             const rawBaseThreat = mainScheme.base_threat !== undefined 
@@ -195,7 +237,6 @@ io.on('connection', (socket) => {
 
     const room = rooms[code];
     
-    // Garantizamos que las salas existentes tengan propiedades seguras
     if (!room.schemes) room.schemes = [{ name: 'Plan Principal', stage: '', baseThreat: 1, baseThreshold: 7, current: 1 }];
     if (!room.villains) room.villains = [{ id: 'v1', name: 'Seleccionar Villano', baseHp: 10, hp: 10 }];
 
