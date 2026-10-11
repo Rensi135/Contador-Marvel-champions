@@ -1,0 +1,4642 @@
+[
+    {
+        "set_code": "unus",
+        "tipo_carta": "Villano",
+        "name": "Unus",
+        "stage": "I",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "unus",
+        "tipo_carta": "Villano",
+        "name": "Unus",
+        "stage": "II",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "unus",
+        "tipo_carta": "Villano",
+        "name": "Unus",
+        "stage": "III",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "unus",
+        "tipo_carta": "Plan Principal",
+        "name": "Cacería de traidores a la raza",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "unus",
+        "tipo_carta": "Plan Principal",
+        "name": "Cacería de traidores a la raza",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "11 (por jugador)"
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Guerra",
+        "stage": "A",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Guerra",
+        "stage": "B",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Hambre",
+        "stage": "A",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Hambre",
+        "stage": "B",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Peste",
+        "stage": "A",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Peste",
+        "stage": "B",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Muerte",
+        "stage": "A",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Villano",
+        "name": "Muerte",
+        "stage": "B",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Plan Principal",
+        "name": "Los Jinetes de Apocalipsis",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "four_horsemen",
+        "tipo_carta": "Plan Principal",
+        "name": "Los Jinetes de Apocalipsis",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "apocalypse",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "I",
+        "health": "8 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "apocalypse",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "II",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "apocalypse",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "III",
+        "health": "10 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "apocalypse",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "IV",
+        "health": "11 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "apocalypse",
+        "tipo_carta": "Plan Principal",
+        "name": "La era de Apocalipsis",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "apocalypse",
+        "tipo_carta": "Plan Principal",
+        "name": "La era de Apocalipsis",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "-1 (por jugador)"
+    },
+    {
+        "set_code": "dark_beast",
+        "tipo_carta": "Villano",
+        "name": "Bestia Oscura",
+        "stage": "I",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "dark_beast",
+        "tipo_carta": "Villano",
+        "name": "Bestia Oscura",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "dark_beast",
+        "tipo_carta": "Villano",
+        "name": "Bestia Oscura",
+        "stage": "III",
+        "health": "22 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "dark_beast",
+        "tipo_carta": "Plan Principal",
+        "name": "El alucinante viaje de la Bestia Oscura",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "dark_beast",
+        "tipo_carta": "Plan Principal",
+        "name": "El alucinante viaje de la Bestia Oscura",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Plan Principal",
+        "name": "La pirámide de En Sabah Nur",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Plan Principal",
+        "name": "La pirámide de En Sabah Nur",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Plan Principal",
+        "name": "La ascensión de Apocalipsis",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Plan Principal",
+        "name": "La ascensión de Apocalipsis",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "II",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "II",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "II",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "III",
+        "health": "24 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "III",
+        "health": "24 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "en_sabah_nur",
+        "tipo_carta": "Villano",
+        "name": "Apocalipsis",
+        "stage": "III",
+        "health": "24 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "black_widow_villain",
+        "tipo_carta": "Villano",
+        "name": "Viuda Negra",
+        "stage": "I",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "black_widow_villain",
+        "tipo_carta": "Villano",
+        "name": "Viuda Negra",
+        "stage": "II",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "black_widow_villain",
+        "tipo_carta": "Villano",
+        "name": "Viuda Negra",
+        "stage": "III",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "black_widow_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "La red de la Viuda",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "black_widow_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "La red de la Viuda",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "-1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Villano",
+        "name": "Batroc",
+        "stage": "A",
+        "health": "8 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Villano",
+        "name": "Batroc",
+        "stage": "B",
+        "health": "12 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Plan Principal",
+        "name": "Infiltrarse en la embajada de I.M.A.",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Plan Principal",
+        "name": "Infiltrarse en la embajada de I.M.A.",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "6 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Plan Principal",
+        "name": "Localizar a la persona desaparecida",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Plan Principal",
+        "name": "Localizar a la persona desaparecida",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "3 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Plan Principal",
+        "name": "Sacar a los prisioneros",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "batroc",
+        "tipo_carta": "Plan Principal",
+        "name": "Sacar a los prisioneros",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "12 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "18 (por jugador)"
+    },
+    {
+        "set_code": "m.o.d.o.k.",
+        "tipo_carta": "Villano",
+        "name": "M.O.D.O.K.",
+        "stage": "A",
+        "health": "10 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "m.o.d.o.k.",
+        "tipo_carta": "Villano",
+        "name": "M.O.D.O.K.",
+        "stage": "B",
+        "health": "14 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "m.o.d.o.k.",
+        "tipo_carta": "Plan Principal",
+        "name": "Mejoras para los adaptoides",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "m.o.d.o.k.",
+        "tipo_carta": "Plan Principal",
+        "name": "Mejoras para los adaptoides",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "thunderbolts",
+        "tipo_carta": "Villano",
+        "name": "Ciudadano V",
+        "stage": "A",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thunderbolts",
+        "tipo_carta": "Villano",
+        "name": "Ciudadano V",
+        "stage": "B",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thunderbolts",
+        "tipo_carta": "Plan Principal",
+        "name": "Arresto de agentes renegados",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thunderbolts",
+        "tipo_carta": "Plan Principal",
+        "name": "Arresto de agentes renegados",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "11 (por jugador)"
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Villano",
+        "name": "Barón Zemo",
+        "stage": "A1",
+        "health": "12 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Villano",
+        "name": "Barón Zemo",
+        "stage": "A2",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Villano",
+        "name": "Barón Zemo",
+        "stage": "B1",
+        "health": "16 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Villano",
+        "name": "Barón Zemo",
+        "stage": "B2",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Plan Principal",
+        "name": "Las manipulaciones de Zemo",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Plan Principal",
+        "name": "Las manipulaciones de Zemo",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Plan Principal",
+        "name": "La acusación",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Plan Principal",
+        "name": "La acusación",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Plan Principal",
+        "name": "Lucha contra Zemo",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "baron_zemo",
+        "tipo_carta": "Plan Principal",
+        "name": "Lucha contra Zemo",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "rhino",
+        "tipo_carta": "Villano",
+        "name": "Rino",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "rhino",
+        "tipo_carta": "Villano",
+        "name": "Rino",
+        "stage": "II",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "rhino",
+        "tipo_carta": "Villano",
+        "name": "Rino",
+        "stage": "III",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "rhino",
+        "tipo_carta": "Plan Principal",
+        "name": "¡Allanamiento!",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "rhino",
+        "tipo_carta": "Plan Principal",
+        "name": "¡Allanamiento!",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "klaw",
+        "tipo_carta": "Villano",
+        "name": "Klaw",
+        "stage": "I",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "klaw",
+        "tipo_carta": "Villano",
+        "name": "Klaw",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "klaw",
+        "tipo_carta": "Villano",
+        "name": "Klaw",
+        "stage": "III",
+        "health": "22 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "klaw",
+        "tipo_carta": "Plan Principal",
+        "name": "Distribución clandestina",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "klaw",
+        "tipo_carta": "Plan Principal",
+        "name": "Distribución clandestina",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "klaw",
+        "tipo_carta": "Plan Principal",
+        "name": "Reunión secreta",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "klaw",
+        "tipo_carta": "Plan Principal",
+        "name": "Reunión secreta",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Villano",
+        "name": "Ultrón",
+        "stage": "I",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Villano",
+        "name": "Ultrón",
+        "stage": "II",
+        "health": "22 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Villano",
+        "name": "Ultrón",
+        "stage": "III",
+        "health": "27 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Plan Principal",
+        "name": "La Capucha Carmesí",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Plan Principal",
+        "name": "La Capucha Carmesí",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "3 (por jugador)"
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Plan Principal",
+        "name": "Ataque al NORAD",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Plan Principal",
+        "name": "Ataque al NORAD",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Plan Principal",
+        "name": "Cuenta atrás para el olvido",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ultron",
+        "tipo_carta": "Plan Principal",
+        "name": "Cuenta atrás para el olvido",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "5 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Ley de Registro de Superhumanos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Retirar el apoyo",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Medidas para el registro",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Prisión en la Zona Negativa",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Ley de Registro de Superhumanos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Reclutas de S.H.I.E.L.D.",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Medidas para el registro",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Caza de héroes rebeldes",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Ley de Registro de Superhumanos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Seguridad Nacional",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Ley de Registro de Superhumanos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Indignación pública",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Medidas para el registro",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "La Iniciativa",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Medidas para el registro",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "registration",
+        "tipo_carta": "Plan Principal",
+        "name": "No hay vuelta atrás",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Resistencia superheroica",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Obtener apoyo",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Actos de resistencia",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Vengadores Secretos",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Resistencia superheroica",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Rebelión abierta",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Actos de resistencia",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Protectores del barrio",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Resistencia superheroica",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Llamamiento",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Resistencia superheroica",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Pasar a la clandestinidad",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Actos de resistencia",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Guerra de Guerillas",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Actos de resistencia",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Fuga de Superhéroes",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "brotherhood_of_badoon",
+        "tipo_carta": "Villano",
+        "name": "Drang",
+        "stage": "I",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "brotherhood_of_badoon",
+        "tipo_carta": "Villano",
+        "name": "Drang",
+        "stage": "II",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "brotherhood_of_badoon",
+        "tipo_carta": "Villano",
+        "name": "Drang",
+        "stage": "III",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "brotherhood_of_badoon",
+        "tipo_carta": "Plan Principal",
+        "name": "Invasión extraterrestre",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "brotherhood_of_badoon",
+        "tipo_carta": "Plan Principal",
+        "name": "Terrestrial Invasion",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "brotherhood_of_badoon",
+        "tipo_carta": "Plan Principal",
+        "name": "Proteger el planeta",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "brotherhood_of_badoon",
+        "tipo_carta": "Plan Principal",
+        "name": "Proteger el planeta",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "4 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "infiltrate_the_museum",
+        "tipo_carta": "Villano",
+        "name": "El Coleccionista",
+        "stage": "I",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "infiltrate_the_museum",
+        "tipo_carta": "Villano",
+        "name": "El Coleccionista",
+        "stage": "II",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "infiltrate_the_museum",
+        "tipo_carta": "Villano",
+        "name": "El Coleccionista",
+        "stage": "III",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "infiltrate_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "La gran colección",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "infiltrate_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "La gran colección",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "4 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Villano",
+        "name": "El Coleccionista",
+        "stage": "A1",
+        "health": "8 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Villano",
+        "name": "El Coleccionista",
+        "stage": "A2",
+        "health": "0 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Villano",
+        "name": "El Coleccionista",
+        "stage": "B1",
+        "health": "10 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Villano",
+        "name": "El Coleccionista",
+        "stage": "B2",
+        "health": "0 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "En busca de la Milano",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "En busca de la Milano",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "7 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "11 (por jugador)"
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "Perdidos en el museo",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "Perdidos en el museo",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "11 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "15 (por jugador)"
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "La gran fuga",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "escape_the_museum",
+        "tipo_carta": "Plan Principal",
+        "name": "La gran fuga",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "8 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "nebula",
+        "tipo_carta": "Villano",
+        "name": "Nébula",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "nebula",
+        "tipo_carta": "Villano",
+        "name": "Nébula",
+        "stage": "II",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "nebula",
+        "tipo_carta": "Villano",
+        "name": "Nébula",
+        "stage": "III",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "nebula",
+        "tipo_carta": "Plan Principal",
+        "name": "El arte de la evasión",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "nebula",
+        "tipo_carta": "Plan Principal",
+        "name": "El arte de la evasión",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "-1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "nebula",
+        "tipo_carta": "Plan Principal",
+        "name": "Motor de cuvatura activado",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "nebula",
+        "tipo_carta": "Plan Principal",
+        "name": "Motor de curvatura activado",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "3 (por jugador)",
+        "escalation_threat": "-1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "ronan",
+        "tipo_carta": "Villano",
+        "name": "Ronan el Acusador",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ronan",
+        "tipo_carta": "Villano",
+        "name": "Ronan el Acusador",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ronan",
+        "tipo_carta": "Villano",
+        "name": "Ronan el Acusador",
+        "stage": "III",
+        "health": "25 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ronan",
+        "tipo_carta": "Plan Principal",
+        "name": "Intercepción inminente",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "ronan",
+        "tipo_carta": "Plan Principal",
+        "name": "Intercepción inminente",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "ronan",
+        "tipo_carta": "Plan Principal",
+        "name": "\"Tomaré lo que me pertenece\"",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "ronan",
+        "tipo_carta": "Plan Principal",
+        "name": "\"Tomaré lo que me pertenece\"",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Villano",
+        "name": "Norman Osborn",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Villano",
+        "name": "Duende Verde",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Villano",
+        "name": "Norman Osborn",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Villano",
+        "name": "Duende Verde",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Villano",
+        "name": "Norman Osborn",
+        "stage": "III",
+        "health": "22 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Villano",
+        "name": "Duende Verde",
+        "stage": "III",
+        "health": "22 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Plan Principal",
+        "name": "OPA hostil",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Plan Principal",
+        "name": "OPA hostil",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Plan Principal",
+        "name": "Adquisición corporativa",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "risky_business",
+        "tipo_carta": "Plan Principal",
+        "name": "Adquisición corporativa",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "mutagen_formula",
+        "tipo_carta": "Villano",
+        "name": "Duende Verde",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mutagen_formula",
+        "tipo_carta": "Villano",
+        "name": "Duende Verde",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mutagen_formula",
+        "tipo_carta": "Villano",
+        "name": "Duende Verde",
+        "stage": "III",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mutagen_formula",
+        "tipo_carta": "Plan Principal",
+        "name": "Liberar el mutágeno",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mutagen_formula",
+        "tipo_carta": "Plan Principal",
+        "name": "Liberar el mutágeno",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "mutagen_formula",
+        "tipo_carta": "Plan Principal",
+        "name": "Nube de mutágeno",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mutagen_formula",
+        "tipo_carta": "Plan Principal",
+        "name": "Nube de mutágeno",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "4 (por jugador)",
+        "escalation_threat": "-1 (fija)",
+        "threat_maxima": "11 (por jugador)"
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Villano",
+        "name": "El Encapuchado",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Villano",
+        "name": "El Encapuchado",
+        "stage": "II",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Villano",
+        "name": "El Encapuchado",
+        "stage": "III",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Plan Principal",
+        "name": "Búsqueda de contactos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Plan Principal",
+        "name": "Búsqueda de contactos",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "5 (por jugador)"
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Plan Principal",
+        "name": "Promesa de prosperidad",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Plan Principal",
+        "name": "Promesa de prosperidad",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Plan Principal",
+        "name": "Estado criminal",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "the_hood",
+        "tipo_carta": "Plan Principal",
+        "name": "Estado criminal",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "3 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "magog",
+        "tipo_carta": "Villano",
+        "name": "MaGog",
+        "stage": "A",
+        "health": "10 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magog",
+        "tipo_carta": "Villano",
+        "name": "MaGog",
+        "stage": "B",
+        "health": "10 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magog",
+        "tipo_carta": "Plan Principal",
+        "name": "El coliseo de Mojo (1A)",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magog",
+        "tipo_carta": "Plan Principal",
+        "name": "El coliseo de Mojo (1B)",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Villano",
+        "name": "Espiral",
+        "stage": "I",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Villano",
+        "name": "Espiral",
+        "stage": "I",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Villano",
+        "name": "Espiral",
+        "stage": "II",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Villano",
+        "name": "Espiral",
+        "stage": "II",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Villano",
+        "name": "Espiral",
+        "stage": "III",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Villano",
+        "name": "Espiral",
+        "stage": "III",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Plan Principal",
+        "name": "Viaje por el Mojoverso (1A)",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "spiral",
+        "tipo_carta": "Plan Principal",
+        "name": "Viaje por el Mojoverso (1B)",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "15 (por jugador)"
+    },
+    {
+        "set_code": "mojo",
+        "tipo_carta": "Villano",
+        "name": "Mojo",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mojo",
+        "tipo_carta": "Villano",
+        "name": "Mojo",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mojo",
+        "tipo_carta": "Villano",
+        "name": "Mojo",
+        "stage": "III",
+        "health": "25 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mojo",
+        "tipo_carta": "Plan Principal",
+        "name": "MojoManía (1A)",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mojo",
+        "tipo_carta": "Plan Principal",
+        "name": "MojoManía (1B)",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "10 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "25 (por jugador)"
+    },
+    {
+        "set_code": "ebony_maw",
+        "tipo_carta": "Villano",
+        "name": "Fauces Negras",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ebony_maw",
+        "tipo_carta": "Villano",
+        "name": "Fauces Negras",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ebony_maw",
+        "tipo_carta": "Villano",
+        "name": "Fauces Negras",
+        "stage": "III",
+        "health": "23 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ebony_maw",
+        "tipo_carta": "Plan Principal",
+        "name": "Ataque a Sapiencial",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ebony_maw",
+        "tipo_carta": "Plan Principal",
+        "name": "Ataque a Sapiencial",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "ebony_maw",
+        "tipo_carta": "Plan Principal",
+        "name": "La Gema del Poder",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "ebony_maw",
+        "tipo_carta": "Plan Principal",
+        "name": "La Gema del Poder",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Villano",
+        "name": "Medianoche Próxima",
+        "stage": "I",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Villano",
+        "name": "Medianoche Próxima",
+        "stage": "II",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Villano",
+        "name": "Medianoche Próxima",
+        "stage": "III",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Villano",
+        "name": "Corvus Glaive",
+        "stage": "I",
+        "health": "8 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Villano",
+        "name": "Corvus Glaive",
+        "stage": "II",
+        "health": "11 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Villano",
+        "name": "Corvus Glaive",
+        "stage": "III",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Plan Principal",
+        "name": "Bajo asedio",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Plan Principal",
+        "name": "Bajo asedio",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Plan Principal",
+        "name": "Los ejércitos de Thanos",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "tower_defense",
+        "tipo_carta": "Plan Principal",
+        "name": "Los ejércitos de Thanos",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "thanos",
+        "tipo_carta": "Villano",
+        "name": "Thanos",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thanos",
+        "tipo_carta": "Villano",
+        "name": "Thanos",
+        "stage": "II",
+        "health": "23 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thanos",
+        "tipo_carta": "Villano",
+        "name": "Thanos",
+        "stage": "III",
+        "health": "28 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thanos",
+        "tipo_carta": "Plan Principal",
+        "name": "Las Gemas del Infinito",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thanos",
+        "tipo_carta": "Plan Principal",
+        "name": "Las Gemas del Infinito",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "thanos",
+        "tipo_carta": "Plan Principal",
+        "name": "Equilibrar la balanza",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thanos",
+        "tipo_carta": "Plan Principal",
+        "name": "Equilibrar la balanza",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "hela",
+        "tipo_carta": "Villano",
+        "name": "Hela",
+        "stage": "A1",
+        "health": "8 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "hela",
+        "tipo_carta": "Villano",
+        "name": "Hela",
+        "stage": "A2",
+        "health": "0 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "hela",
+        "tipo_carta": "Villano",
+        "name": "Hela",
+        "stage": "B1",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "hela",
+        "tipo_carta": "Villano",
+        "name": "Hela",
+        "stage": "B2",
+        "health": "0 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "hela",
+        "tipo_carta": "Plan Principal",
+        "name": "El tormento de Odín",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "hela",
+        "tipo_carta": "Plan Principal",
+        "name": "El tormento de Odín",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "18 (por jugador)"
+    },
+    {
+        "set_code": "loki",
+        "tipo_carta": "Villano",
+        "name": "Loki",
+        "stage": "I",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "loki",
+        "tipo_carta": "Villano",
+        "name": "Loki",
+        "stage": "I",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "loki",
+        "tipo_carta": "Villano",
+        "name": "Loki",
+        "stage": "I",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "loki",
+        "tipo_carta": "Villano",
+        "name": "Loki",
+        "stage": "I",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "loki",
+        "tipo_carta": "Villano",
+        "name": "Loki",
+        "stage": "I",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "loki",
+        "tipo_carta": "Plan Principal",
+        "name": "Alabado sea el rey Loki",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "loki",
+        "tipo_carta": "Plan Principal",
+        "name": "Alabado sea el rey Loki",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "sabretooth",
+        "tipo_carta": "Villano",
+        "name": "Dientes de Sable",
+        "stage": "I",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sabretooth",
+        "tipo_carta": "Villano",
+        "name": "Dientes de Sable",
+        "stage": "II",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sabretooth",
+        "tipo_carta": "Villano",
+        "name": "Dientes de Sable",
+        "stage": "III",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sabretooth",
+        "tipo_carta": "Plan Principal",
+        "name": "Acosado por Dientes de Sable",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sabretooth",
+        "tipo_carta": "Plan Principal",
+        "name": "Acosado por Dientes de Sable",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sabretooth",
+        "tipo_carta": "Plan Principal",
+        "name": "El Senador herido",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sabretooth",
+        "tipo_carta": "Plan Principal",
+        "name": "El Senador herido",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "project_wideawake",
+        "tipo_carta": "Villano",
+        "name": "Centinela",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "project_wideawake",
+        "tipo_carta": "Villano",
+        "name": "Centinela",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "project_wideawake",
+        "tipo_carta": "Villano",
+        "name": "Centinela",
+        "stage": "III",
+        "health": "22 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "project_wideawake",
+        "tipo_carta": "Plan Principal",
+        "name": "Noche de los centinelas",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "project_wideawake",
+        "tipo_carta": "Plan Principal",
+        "name": "Noche de los centinelas",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "master_mold",
+        "tipo_carta": "Villano",
+        "name": "Molde Maestro",
+        "stage": "I",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "master_mold",
+        "tipo_carta": "Villano",
+        "name": "Molde Maestro",
+        "stage": "II",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "master_mold",
+        "tipo_carta": "Villano",
+        "name": "Molde Maestro",
+        "stage": "III",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "master_mold",
+        "tipo_carta": "Plan Principal",
+        "name": "La fábrica de centinelas",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "master_mold",
+        "tipo_carta": "Plan Principal",
+        "name": "La fábrica de centinelas",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "master_mold",
+        "tipo_carta": "Plan Principal",
+        "name": "El plan del Molde Maestro",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "master_mold",
+        "tipo_carta": "Plan Principal",
+        "name": "El plan del Molde Maestro",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Avalancha A",
+        "stage": "A",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Avalancha B",
+        "stage": "B",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Mole A",
+        "stage": "A",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Mole B",
+        "stage": "B",
+        "health": "19 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Piros A",
+        "stage": "A",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Piros B",
+        "stage": "B",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Sapo A",
+        "stage": "A",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Villano",
+        "name": "Sapo B",
+        "stage": "B",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "¡La Hermandad ataca!",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "¡La Hermandad ataca!",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (por jugador)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "0 (por jugador)"
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "El vestíbulo",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "El vestíbulo",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "La cafetería",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "La cafetería",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "La cancha de baloncesto",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "La cancha de baloncesto",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "El patio",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mansion_attack",
+        "tipo_carta": "Plan Principal",
+        "name": "El patio",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Villano",
+        "name": "Magneto",
+        "stage": "I",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Villano",
+        "name": "Magneto",
+        "stage": "II",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Villano",
+        "name": "Magneto",
+        "stage": "III",
+        "health": "22 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Asteroide M",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Asteroide M",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "5 (por jugador)"
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Fábrica operativa",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Fábrica operativa",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "La dictadura de Magnus",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "magneto_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "La dictadura de Magnus",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Arco Voltaico",
+        "stage": "A",
+        "health": "10 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Arco Voltaico",
+        "stage": "B",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Demoledor",
+        "stage": "A",
+        "health": "11 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Demoledor",
+        "stage": "B",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Quimera",
+        "stage": "A",
+        "health": "11 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Quimera",
+        "stage": "B",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Cuervo Gris",
+        "stage": "A",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Cuervo Gris",
+        "stage": "B",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Arpón",
+        "stage": "A",
+        "health": "10 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Arpón",
+        "stage": "B",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Marea",
+        "stage": "A",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Marea",
+        "stage": "B",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Vértigo",
+        "stage": "A",
+        "health": "9 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "marauders",
+        "tipo_carta": "Villano",
+        "name": "Vértigo",
+        "stage": "B",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "morlock_siege",
+        "tipo_carta": "Plan Principal",
+        "name": "Toc, Toc",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "morlock_siege",
+        "tipo_carta": "Plan Principal",
+        "name": "Toc, Toc",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "morlock_siege",
+        "tipo_carta": "Plan Principal",
+        "name": "Masacre mutante",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "morlock_siege",
+        "tipo_carta": "Plan Principal",
+        "name": "Masacre mutante",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "on_the_run",
+        "tipo_carta": "Plan Principal",
+        "name": "Larguémonos de aquí",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "on_the_run",
+        "tipo_carta": "Plan Principal",
+        "name": "Larguémonos de aquí",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "on_the_run",
+        "tipo_carta": "Plan Principal",
+        "name": "Escapar con Hope",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "on_the_run",
+        "tipo_carta": "Plan Principal",
+        "name": "Escapar con Hope",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "juggernaut",
+        "tipo_carta": "Villano",
+        "name": "Juggernaut",
+        "stage": "I",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "juggernaut",
+        "tipo_carta": "Villano",
+        "name": "Juggernaut",
+        "stage": "II",
+        "health": "21 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "juggernaut",
+        "tipo_carta": "Villano",
+        "name": "Juggernaut",
+        "stage": "III",
+        "health": "25 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "juggernaut",
+        "tipo_carta": "Plan Principal",
+        "name": "El imparable Juggernaut",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "juggernaut",
+        "tipo_carta": "Plan Principal",
+        "name": "El imparable Juggernaut",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Villano",
+        "name": "Mister Siniestro",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Villano",
+        "name": "Mister Siniestro",
+        "stage": "II",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Villano",
+        "name": "Mister Siniestro",
+        "stage": "III",
+        "health": "21 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Intenciones siniestras",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Intenciones siniestras",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Remontar el vuelo",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Remontar el vuelo",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "5 (por jugador)"
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Aumentar la musculatura",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Aumentar la musculatura",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "5 (por jugador)"
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Agudizar la concentración",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Agudizar la concentración",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "5 (por jugador)"
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Fines siniestros",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mister_sinister",
+        "tipo_carta": "Plan Principal",
+        "name": "Fines siniestros",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "stryfe",
+        "tipo_carta": "Villano",
+        "name": "Dyscordia",
+        "stage": "I",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "stryfe",
+        "tipo_carta": "Villano",
+        "name": "Dyscordia",
+        "stage": "II",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "stryfe",
+        "tipo_carta": "Villano",
+        "name": "Dyscordia",
+        "stage": "III",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "stryfe",
+        "tipo_carta": "Plan Principal",
+        "name": "Poder incontrolable",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "stryfe",
+        "tipo_carta": "Plan Principal",
+        "name": "Poder incontrolable",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "0 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "stryfe",
+        "tipo_carta": "Plan Principal",
+        "name": "Abandonados a vuestra suerte",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "stryfe",
+        "tipo_carta": "Plan Principal",
+        "name": "Abandonados a vuestra suerte",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "sandman",
+        "tipo_carta": "Villano",
+        "name": "Hombre de Arena",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sandman",
+        "tipo_carta": "Villano",
+        "name": "Hombre de Arena",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sandman",
+        "tipo_carta": "Villano",
+        "name": "Hombre de Arena",
+        "stage": "III",
+        "health": "19 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sandman",
+        "tipo_carta": "Plan Principal",
+        "name": "Peatones indefensos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sandman",
+        "tipo_carta": "Plan Principal",
+        "name": "Peatones indefensos",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "venom",
+        "tipo_carta": "Villano",
+        "name": "Veneno",
+        "stage": "I",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom",
+        "tipo_carta": "Villano",
+        "name": "Veneno",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom",
+        "tipo_carta": "Villano",
+        "name": "Veneno",
+        "stage": "III",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom",
+        "tipo_carta": "Plan Principal",
+        "name": "\"¡Dejadnos en paz!\"",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom",
+        "tipo_carta": "Plan Principal",
+        "name": "\"¡Dejadnos en paz!\"",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "mysterio",
+        "tipo_carta": "Villano",
+        "name": "Mysterio",
+        "stage": "I",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mysterio",
+        "tipo_carta": "Villano",
+        "name": "Mysterio",
+        "stage": "II",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mysterio",
+        "tipo_carta": "Villano",
+        "name": "Mysterio",
+        "stage": "III",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mysterio",
+        "tipo_carta": "Plan Principal",
+        "name": "Laberinto de espejos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mysterio",
+        "tipo_carta": "Plan Principal",
+        "name": "Laberinto de espejos",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "mysterio",
+        "tipo_carta": "Plan Principal",
+        "name": "Los límites de la realidad",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "mysterio",
+        "tipo_carta": "Plan Principal",
+        "name": "Los límites de la realidad",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "3 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Villano",
+        "name": "Doctor Octopus",
+        "stage": "I",
+        "health": "8 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Villano",
+        "name": "Electro",
+        "stage": "I",
+        "health": "8 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Villano",
+        "name": "Duende",
+        "stage": "I",
+        "health": "9 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Villano",
+        "name": "Kraven el Cazador",
+        "stage": "I",
+        "health": "9 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Villano",
+        "name": "Escorpión",
+        "stage": "I",
+        "health": "10 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Villano",
+        "name": "Buitre",
+        "stage": "I",
+        "health": "7 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Plan Principal",
+        "name": "Sincronización siniestra",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Plan Principal",
+        "name": "Sincronización siniestra",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Plan Principal",
+        "name": "Zurra siniestra",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "sinister_six",
+        "tipo_carta": "Plan Principal",
+        "name": "Zurra siniestra",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "3 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "venom_goblin",
+        "tipo_carta": "Villano",
+        "name": "Duende Veneno",
+        "stage": "I",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom_goblin",
+        "tipo_carta": "Villano",
+        "name": "Duende Veneno",
+        "stage": "II",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom_goblin",
+        "tipo_carta": "Villano",
+        "name": "Duende Veneno",
+        "stage": "III",
+        "health": "21 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom_goblin",
+        "tipo_carta": "Plan Principal",
+        "name": "El cielo de Nueva York",
+        "stage": "A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "venom_goblin",
+        "tipo_carta": "Plan Principal",
+        "name": "Lower Manhattan",
+        "stage": "B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "11 (por jugador)"
+    },
+    {
+        "set_code": "venom_goblin",
+        "tipo_carta": "Plan Principal",
+        "name": "Midtown Manhattan",
+        "stage": "C",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "venom_goblin",
+        "tipo_carta": "Plan Principal",
+        "name": "Upper Manhattan",
+        "stage": "D",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "synthezoid_registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Ley de Registro de Superhumanos",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "synthezoid_registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Imponer la ley",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "synthezoid_registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Medidas para el registro",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "synthezoid_registration",
+        "tipo_carta": "Plan Principal",
+        "name": "Poderosos Vengadores",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "synthezoid_resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Resistencia superheroica",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "synthezoid_resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Proteger las identidades secretas",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "synthezoid_resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Actos de resistencia",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "synthezoid_resistance",
+        "tipo_carta": "Plan Principal",
+        "name": "Divulgar los abusos",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (El Conquistador)",
+        "stage": "I",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Inmortus)",
+        "stage": "II",
+        "health": "18 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Iron Lad)",
+        "stage": "II",
+        "health": "18 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Rama-Tut)",
+        "stage": "II",
+        "health": "18 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Centurión Escarlata)",
+        "stage": "II",
+        "health": "18 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (El Conquistador)",
+        "stage": "III",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "La llegada de Kang",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "La llegada de Kang",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "7 (por jugador)"
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "El amo del tiempo",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "El amo del tiempo",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "Cronópolis",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "Cronópolis",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (fija)",
+        "threat_maxima": "9 (fija)"
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "Destino inexorable",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "Destino inexorable",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "1 (fija)",
+        "escalation_threat": "1 (fija)",
+        "threat_maxima": "9 (fija)"
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "En el reino de Rama-Tut",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "En el reino de Rama-Tut",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "1 (fija)",
+        "escalation_threat": "1 (fija)",
+        "threat_maxima": "9 (fija)"
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "La actual guerra del futuro",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "La actual guerra del futuro",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "2 (fija)",
+        "escalation_threat": "1 (fija)",
+        "threat_maxima": "9 (fija)"
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "La ira de Kang",
+        "stage": "4A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "kang",
+        "tipo_carta": "Plan Principal",
+        "name": "La ira de Kang",
+        "stage": "4B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "10 (por jugador)"
+    },
+    {
+        "set_code": "exp_kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (El Conquistador)",
+        "stage": "I",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "exp_kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Inmortus)",
+        "stage": "II",
+        "health": "22 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "exp_kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Iron Lad)",
+        "stage": "II",
+        "health": "22 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "exp_kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Rama-Tut)",
+        "stage": "II",
+        "health": "22 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "exp_kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (Centurión Escarlata)",
+        "stage": "II",
+        "health": "22 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "exp_kang",
+        "tipo_carta": "Villano",
+        "name": "Kang (El Conquistador)",
+        "stage": "III",
+        "health": "25 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Villano",
+        "name": "Calavera",
+        "stage": "I",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Villano",
+        "name": "Calavera",
+        "stage": "II",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Villano",
+        "name": "Calavera",
+        "stage": "III",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Plan Principal",
+        "name": "Ataque al monte Atenea",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Plan Principal",
+        "name": "Ataque al monte Atenea",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "3 (por jugador)"
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Plan Principal",
+        "name": "La piedra del infinito",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Plan Principal",
+        "name": "La piedra del infinito",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Plan Principal",
+        "name": "La huida",
+        "stage": "3A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "crossbones",
+        "tipo_carta": "Plan Principal",
+        "name": "La huida",
+        "stage": "3B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "5 (por jugador)"
+    },
+    {
+        "set_code": "absorbing_man",
+        "tipo_carta": "Villano",
+        "name": "Hombre Absorbente",
+        "stage": "I",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "absorbing_man",
+        "tipo_carta": "Villano",
+        "name": "Hombre Absorbente",
+        "stage": "II",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "absorbing_man",
+        "tipo_carta": "Villano",
+        "name": "Hombre Absorbente",
+        "stage": "III",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "absorbing_man",
+        "tipo_carta": "Plan Principal",
+        "name": "Por aquí no pasa nadie",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "absorbing_man",
+        "tipo_carta": "Plan Principal",
+        "name": "Por aquí no pasa nadie",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "taskmaster",
+        "tipo_carta": "Villano",
+        "name": "Supervisor",
+        "stage": "I",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "taskmaster",
+        "tipo_carta": "Villano",
+        "name": "Supervisor",
+        "stage": "II",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "taskmaster",
+        "tipo_carta": "Villano",
+        "name": "Supervisor",
+        "stage": "III",
+        "health": "17 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "taskmaster",
+        "tipo_carta": "Plan Principal",
+        "name": "A la caza del héroe",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "taskmaster",
+        "tipo_carta": "Plan Principal",
+        "name": "A la caza del héroe",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "12 (por jugador)"
+    },
+    {
+        "set_code": "zola",
+        "tipo_carta": "Villano",
+        "name": "Zola",
+        "stage": "I",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "zola",
+        "tipo_carta": "Villano",
+        "name": "Zola",
+        "stage": "II",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "zola",
+        "tipo_carta": "Villano",
+        "name": "Zola",
+        "stage": "III",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "zola",
+        "tipo_carta": "Plan Principal",
+        "name": "La isla del doctor Zola",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "zola",
+        "tipo_carta": "Plan Principal",
+        "name": "La isla del doctor Zola",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "zola",
+        "tipo_carta": "Plan Principal",
+        "name": "El científico loco",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "zola",
+        "tipo_carta": "Plan Principal",
+        "name": "El científico loco",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "red_skull",
+        "tipo_carta": "Villano",
+        "name": "Cráneo Rojo",
+        "stage": "I",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "red_skull",
+        "tipo_carta": "Villano",
+        "name": "Cráneo Rojo",
+        "stage": "II",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "red_skull",
+        "tipo_carta": "Villano",
+        "name": "Cráneo Rojo",
+        "stage": "III",
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "red_skull",
+        "tipo_carta": "Plan Principal",
+        "name": "La tiranía de Cráneo Rojo",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "red_skull",
+        "tipo_carta": "Plan Principal",
+        "name": "La tiranía de Cráneo Rojo",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "red_skull",
+        "tipo_carta": "Plan Principal",
+        "name": "El nuevo mundo de Hydra",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "red_skull",
+        "tipo_carta": "Plan Principal",
+        "name": "El nuevo mundo de Hydra",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "11 (por jugador)"
+    },
+    {
+        "set_code": "enchantress_villain",
+        "tipo_carta": "Villano",
+        "name": "Encantadora",
+        "stage": "I",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "enchantress_villain",
+        "tipo_carta": "Villano",
+        "name": "Encantadora",
+        "stage": "II",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "enchantress_villain",
+        "tipo_carta": "Villano",
+        "name": "Encantadora",
+        "stage": "III",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "enchantress_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Recalificación territorial",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "enchantress_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Recalificación territorial",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "1 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "enchantress_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Hechicera soberana",
+        "stage": "2A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "enchantress_villain",
+        "tipo_carta": "Plan Principal",
+        "name": "Hechicera soberana",
+        "stage": "2B",
+        "health": "",
+        "base_threat": "2 (por jugador)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "9 (por jugador)"
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Loki, Dios de las Mentiras",
+        "stage": 1,
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Loki, Dios de las Mentiras",
+        "stage": 2,
+        "health": "20 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Plan Principal",
+        "name": "Mundos en colisión",
+        "stage": "A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Plan Principal",
+        "name": "Mundos en colisión",
+        "stage": "B",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "2 (por jugador)",
+        "threat_maxima": "2 (por jugador)"
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Loki el granuja",
+        "stage": "A1",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Ilusión disipada",
+        "stage": "A2",
+        "health": "99 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Loki el bribón",
+        "stage": "B1",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Ilusión disipada",
+        "stage": "B2",
+        "health": "99 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Loki el bellaco",
+        "stage": "C1",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Ilusión disipada",
+        "stage": "C2",
+        "health": "99 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Loki el canalla",
+        "stage": "D1",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Villano",
+        "name": "Ilusión disipada",
+        "stage": "D2",
+        "health": "99 (fija)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Plan Principal",
+        "name": "Maldad y alevosía",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "god_of_lies",
+        "tipo_carta": "Plan Principal",
+        "name": "Maldad y alevosía",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (por jugador)",
+        "threat_maxima": "8 (por jugador)"
+    },
+    {
+        "set_code": "wrecking_crew",
+        "tipo_carta": "Plan Principal",
+        "name": "Fuga de prisión",
+        "stage": "1A",
+        "health": "",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "wrecking_crew",
+        "tipo_carta": "Plan Principal",
+        "name": "Fuga de prisión",
+        "stage": "1B",
+        "health": "",
+        "base_threat": "0 (fija)",
+        "escalation_threat": "1 (fija)",
+        "threat_maxima": "6 (por jugador)"
+    },
+    {
+        "set_code": "wrecker",
+        "tipo_carta": "Villano",
+        "name": "Destructor",
+        "stage": "A",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "wrecker",
+        "tipo_carta": "Villano",
+        "name": "Destructor",
+        "stage": "B",
+        "health": "18 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thunderball",
+        "tipo_carta": "Villano",
+        "name": "Bola de Trueno",
+        "stage": "A",
+        "health": "13 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "thunderball",
+        "tipo_carta": "Villano",
+        "name": "Bola de Trueno",
+        "stage": "B",
+        "health": "16 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "piledriver",
+        "tipo_carta": "Villano",
+        "name": "Martinete",
+        "stage": "A",
+        "health": "11 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "piledriver",
+        "tipo_carta": "Villano",
+        "name": "Martinete",
+        "stage": "B",
+        "health": "14 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "bulldozer",
+        "tipo_carta": "Villano",
+        "name": "Bulldozer",
+        "stage": "A",
+        "health": "12 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    },
+    {
+        "set_code": "bulldozer",
+        "tipo_carta": "Villano",
+        "name": "Bulldozer",
+        "stage": "B",
+        "health": "15 (por jugador)",
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
+    }
+]
