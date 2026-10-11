@@ -12,7 +12,7 @@
     header h1 { font-size: 1rem; color: #fbc02d; text-transform: uppercase; }
     .badge { background: #f57c00; padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; color: #fff; }
     
-    /* SELECTOR DE JUGADORES */
+    /* SELECTOR DE JUGADORES Y BOTONES DE ETAPA */
     .players-selector { background: #18181c; padding: 10px 14px; border-radius: 12px; border: 1px solid #2a2a35; display: flex; align-items: center; justify-content: space-between; }
     .players-selector span { font-size: 0.85rem; color: #aaa; font-weight: bold; text-transform: uppercase; }
     .players-counter { display: flex; align-items: center; gap: 8px; }
@@ -25,6 +25,10 @@
       -moz-appearance: textfield; user-select: text;
     }
     .input-players::-webkit-outer-spin-button, .input-players::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .stage-advance-container { display: flex; gap: 10px; width: 100%; }
+    .btn-stage { flex: 1; padding: 10px; background: #282834; border: 1px solid #fbc02d; color: #fbc02d; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; }
+    .btn-stage:active { background: #fbc02d; color: #000; }
 
     /* TARJETAS */
     .card { background: #18181c; border-radius: 12px; padding: 14px; border: 1px solid #2a2a35; display: flex; flex-direction: column; align-items: center; position: relative; margin-bottom: 10px; }
@@ -108,6 +112,12 @@
       <input type="number" class="input-players" id="players-count" value="1" min="1" onkeydown="if(event.key==='Enter') this.blur()" onchange="setPlayers(this.value)">
       <button class="btn-qty" onclick="adjustPlayers(1)">+</button>
     </div>
+  </div>
+
+  <!-- BOTONES DE AVANCE DE ETAPA GLOBAL -->
+  <div class="stage-advance-container">
+    <button class="btn-stage" onclick="nextSchemeStage()">Siguiente Plan</button>
+    <button class="btn-stage" onclick="nextVillainStage()">Siguiente Villano</button>
   </div>
 
   <!-- PLANES PRINCIPALES -->
@@ -337,6 +347,10 @@
       if (isNaN(p) || p < 1) return;
       socket.emit('update_players', { players: p });
     }
+
+    // Funciones de avance de etapa global
+    function nextSchemeStage() { socket.emit('next_scheme_stage'); }
+    function nextVillainStage() { socket.emit('next_villain_stage'); }
 
     // Funciones de control de planes
     function changeSchemeThreat(index, delta) { socket.emit('update_scheme', { action: 'change_threat', index, delta }); }
