@@ -172,7 +172,7 @@
         item.className = 'dropdown-item';
         const villano = v.villainName || 'Villano';
         const plan = v.mainSchemes && v.mainSchemes[0] && v.mainSchemes[0].name ? ` — ${v.mainSchemes[0].name}` : '';
-        item.textContent = `${villano}${plan} [set: ${v.key}]`;
+        item.textContent = `${villano}${plan} [set:${v.key}]`;
         
         item.onclick = () => {
           document.getElementById('modal-villain-search').value = `${villano}${plan}`;
@@ -197,4 +197,53 @@
     socket.on('init_session', (data) => {
       isHost = data.isHost;
       if (data.database) {
-        populateVillainSelect
+        populateVillainSelect(data.database);
+      }
+    });
+
+    socket.on('update_room', (data) => {
+      const modal = document.getElementById('villain-modal');
+      if (!data.selectedVillain && isHost) {
+        modal.style.display = 'flex';
+      } else {
+        modal.style.display = 'none';
+      }
+
+      if (data.database) {
+        populateVillainSelect(data.database);
+      }
+
+      const inputP = document.getElementById('players-count');
+      if (document.activeElement !== inputP) inputP.value = data.players || 1;
+
+      const players = data.players || 1;
+
+      // Renderizar planes principales
+      const schemesContainer = document.getElementById('schemes');
+      const schemes = data.schemes || [];
+
+      schemesContainer.innerHTML = '';
+      schemes.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card threat';
+        card.id = `card-scheme-${idx}`;
+
+        const schemeTitle = `${s.name \vert{}\vert{} 'Plan Principal'}${s.stage ? ' ' + s.stage : ''}`;
+        const thresholdTotal = (s.baseThreshold || 7) * players;
+
+        card.innerHTML = `
+          ${schemes.length > 1 ? `<button class="btn-del" onclick="removeSchemeAt(${idx})">✕</button>` : ''}
+          
+          <input class="input-name" id="sname-${idx}" value="${schemeTitle}" placeholder="Nombre del Plan" 
+            onkeydown="if(event.key==='Enter') this.blur()" 
+            onchange="updateSchemeName(${idx}, this.value)">
+          
+          <div class="hp-display" id="sthreat-${idx}">${s.current || 0} / <span style="color: #aaa; font-size: 2.2rem;">${thresholdTotal}</span></div>
+          
+          <div class="btn-grid">
+            <button class="btn-minus" onclick="changeSchemeThreat(${idx}, -1)">-1</button>
+            <button class="btn-plus" onclick="changeSchemeThreat(${idx}, 1)">+1</button>
+            <button class="btn-minus" onclick="changeSchemeThreat(${idx}, -5)">-5</button>
+            <button class="btn-plus" onclick="changeSchemeThreat(${idx}, 5)">+5</button>
+            <button class="btn-minus" onclick="changeSchemeThreat(${idx}, -10)">-10</button>
+            <button class="
