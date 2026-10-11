@@ -46,10 +46,12 @@ function loadDatabase() {
             });
           }
         } 
-        // 2. Guardamos la primera etapa de Plan Principal
+        // 2. Guardamos de forma inteligente el Plan Principal priorizando la etapa B (ej. 1B, 2B) que tiene los datos reales
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme'))) {
           const stage = String(card.stage || card.stage_code || '').toUpperCase();
-          if (!sets[code].mainScheme || stage.includes('1') || stage.includes('A')) {
+          const hasThreshold = card.threat_maxima || card.escalation_threat || card.base_threat || card.base_threat_fixed;
+
+          if (!sets[code].mainScheme || stage.includes('B') || (hasThreshold && !String(sets[code].mainScheme.threat_maxima || '').match(/\d+/))) {
             sets[code].mainScheme = card;
           }
         }
