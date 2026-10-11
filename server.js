@@ -74,55 +74,19 @@ function loadDatabase() {
             return (max.match(/\d+/) && !max.includes('-1')) || base.match(/\d+/) || esc.match(/\d+/);
           };
 
-          // CASO ESPECIAL: Grupo de Demolición (Cargamos los 5 planes: el general y los 4 individuales de cada villano)
+          // CASO ESPECIAL: Grupo de Demolición (Cargamos todos los planes exactos sin omitir ninguno)
           if (set.set_code === 'wrecking_crew') {
             const formattedSchemes = [];
 
-            // 1. Buscamos primero el plan general (ej. "Fuga de prisión" 1B)
-            let generalScheme = schemes.find(s => {
-              const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
-              return stageStr === '1B' || stageStr === '1';
-            }) || schemes[0];
-
-            if (generalScheme) {
-              const rawBaseThreat = generalScheme.base_threat !== undefined ? generalScheme.base_threat : 0;
-              const threatBase = parseNumeric(rawBaseThreat, 0);
-              const rawThreshold = generalScheme.threat_maxima || generalScheme.threshold || 6;
-              const threatMax = parseNumeric(rawThreshold, 6);
-
-              formattedSchemes.push({
-                name: generalScheme.name || 'Fuga de prisión',
-                stage: generalScheme.stage || generalScheme.stage_code || '1B',
-                baseThreat: threatBase,
-                baseThreshold: threatMax,
-                current: threatBase
-              });
-            }
-
-            // 2. Añadimos los planes individuales correspondientes a cada villano
-            villainsList.forEach(v => {
-              let matchingScheme = schemes.find(s => {
-                const sName = (s.name || '').toLowerCase();
-                const vName = v.name.toLowerCase();
-                return (sName.includes(vName) || vName.includes(sName)) && s !== generalScheme;
-              });
-
-              if (!matchingScheme) {
-                matchingScheme = schemes.find(s => s !== generalScheme && !formattedSchemes.some(fs => fs.name === s.name));
-              }
-
-              if (!matchingScheme) {
-                matchingScheme = { name: `Plan de ${v.name}`, stage: 'B', base_threat: 1, threat_maxima: '7' };
-              }
-
-              const rawBaseThreat = matchingScheme.base_threat !== undefined ? matchingScheme.base_threat : 1;
+            schemes.forEach(schemeCard => {
+              const rawBaseThreat = schemeCard.base_threat !== undefined ? schemeCard.base_threat : 1;
               const threatBase = parseNumeric(rawBaseThreat, 1);
-              const rawThreshold = matchingScheme.threat_maxima || matchingScheme.threshold || 7;
+              const rawThreshold = schemeCard.threat_maxima || schemeCard.threshold || 7;
               const threatMax = parseNumeric(rawThreshold, 7);
 
               formattedSchemes.push({
-                name: matchingScheme.name || `Plan de ${v.name}`,
-                stage: matchingScheme.stage || matchingScheme.stage_code || 'B',
+                name: schemeCard.name || 'Plan Principal',
+                stage: schemeCard.stage || schemeCard.stage_code || '',
                 baseThreat: threatBase,
                 baseThreshold: threatMax,
                 current: threatBase
