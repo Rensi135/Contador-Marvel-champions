@@ -61,12 +61,19 @@
     .villains-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
     .btn-del { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #888; font-size: 1.2rem; cursor: pointer; width: auto; padding: 0; }
 
-    /* MODAL SELECCIÓN INICIAL */
+    /* MODAL SELECCIÓN INICIAL Y BUSCADOR PERSONALIZADO */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; padding: 16px; }
-    .modal-card { background: #18181c; padding: 24px; border-radius: 12px; border: 2px solid #fbc02d; text-align: center; max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
+    .modal-card { background: #18181c; padding: 24px; border-radius: 12px; border: 2px solid #fbc02d; text-align: center; max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 16px; position: relative; }
     .modal-card h2 { color: #fbc02d; font-size: 1.2rem; text-transform: uppercase; }
     .modal-card p { color: #aaa; font-size: 0.85rem; line-height: 1.3; }
-    .modal-select { width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid #fbc02d; border-radius: 8px; font-size: 0.95rem; outline: none; }
+    
+    .search-container { position: relative; width: 100%; }
+    .modal-select { width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid #fbc02d; border-radius: 8px; font-size: 0.95rem; outline: none; text-align: left; }
+    
+    .dropdown-results { position: absolute; top: 100%; left: 0; right: 0; max-height: 180px; overflow-y: auto; background: #000; border: 1px solid #fbc02d; border-top: none; border-radius: 0 0 8px 8px; z-index: 1000; display: none; text-align: left; }
+    .dropdown-item { padding: 10px 12px; font-size: 0.9rem; color: #fff; cursor: pointer; border-bottom: 1px solid #222; }
+    .dropdown-item:hover { background: #282834; color: #fbc02d; }
+
     .btn-confirm { width: 100%; padding: 12px; background: #fbc02d; color: #000; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; text-transform: uppercase; }
     .btn-confirm:active { background: #f57c00; color: #fff; }
   </style>
@@ -77,13 +84,12 @@
   <div class="modal-overlay" id="villain-modal">
     <div class="modal-card">
       <h2>Seleccionar Escenario</h2>
-      <p>Escribe o selecciona el villano de la base de datos para cargar automáticamente los datos del Plan Principal y Vida.</p>
+      <p>Busca y selecciona el villano de la base de datos para cargar automáticamente los datos.</p>
       
-      <!-- Campo buscador con autocompletado datalist -->
-      <input class="modal-select" id="modal-villain-search" list="villains-list-options" placeholder="🔍 Escribe para buscar escenario..." autocomplete="off">
-      <datalist id="villains-list-options">
-        <!-- Las opciones se generan dinámicamente -->
-      </datalist>
+      <div class="search-container">
+        <input type="text" class="modal-select" id="modal-villain-search" placeholder="🔍 Escribe para buscar villano o set..." autocomplete="off" oninput="filterVillains(this.value)">
+        <div class="dropdown-results" id="villains-dropdown"></div>
+      </div>
 
       <button class="btn-confirm" onclick="confirmVillainSelection()">Cargar Escenario</button>
     </div>
@@ -155,28 +161,64 @@
     document.getElementById('room-badge').innerText = `SALA: ${roomCode}`;
 
     let isHost = false;
+    let globalDatabase = [];
+    let selectedPresetKey = '';
 
     socket.emit('join_room', { roomCode });
 
-    // Poblar el datalist para que el buscador autocomplete y filtre automáticamente
+    // Guardar la base de datos completa y mostrar todos los elementos iniciales
     function populateVillainSelect(database) {
-      const datalist = document.getElementById('villains-list-options');
-      if (!datalist || !Array.isArray(database) || database.length === 0) return;
+      globalDatabase = database || [];
+      filterVillains('');
+    }
 
-      datalist.innerHTML = '';
-      database.forEach(v => {
-        const opt = document.createElement('option');
-        // Usamos la propiedad key (set_code)
-        opt.value = v.key;
-        
+    // Filtrar la lista desplegable personalizada según el texto escrito
+    function filterVillains(query) {
+      const dropdown = document.getElementById('villains-dropdown');
+      if (!dropdown) return;
+
+      dropdown.innerHTML = '';
+      const text = query.toLowerCase();
+
+      const filtered = globalDatabase.filter(v => {
+        const villano = (v.villainName || '').toLowerCase();
+        const plan = (v.mainScheme && v.mainScheme.name ? v.mainScheme.name : '').toLowerCase();
+        const key = (v.key || '').toLowerCase();
+        return villano.includes(text) || plan.includes(text) || key.includes(text);
+      });
+
+      if (filtered.length === 0) {
+        dropdown.style.display = 'none';
+        return;
+      }
+
+      filtered.forEach(v => {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
         const villano = v.villainName || 'Villano';
         const plan = v.mainScheme && v.mainScheme.name ? ` — ${v.mainScheme.name}` : '';
+        item.textContent = `${villano}${plan} [set: ${v.key}]`;
         
-        // Asignamos la etiqueta descriptiva para el desplegable visual
-        opt.label = `${villano}${plan}`;
-        datalist.appendChild(opt);
+        item.onclick = () => {
+          document.getElementById('modal-villain-search').value = `${villano}${plan}`;
+          selectedPresetKey = v.key; // Guardamos exactamente el set_code real
+          dropdown.style.display = 'none';
+        };
+
+        dropdown.appendChild(item);
       });
+
+      dropdown.style.display = 'block';
     }
+
+    // Ocultar el desplegable si se hace clic fuera
+    document.addEventListener('click', (e) => {
+      const container = document.querySelector('.search-container');
+      const dropdown = document.getElementById('villains-dropdown');
+      if (container && !container.contains(e.target)) {
+        if (dropdown) dropdown.style.display = 'none';
+      }
+    });
 
     socket.on('init_session', (data) => {
       isHost = data.isHost;
@@ -259,24 +301,22 @@
       });
     });
 
-    // Confirmar la selección buscando si coincide con key o etiqueta elegida
+    // Enviar el set_code real seleccionado al servidor
     function confirmVillainSelection() {
-      const searchInput = document.getElementById('modal-villain-search');
-      const inputVal = searchInput ? searchInput.value.trim() : '';
-      if (!inputVal) return;
-
-      let selectedKey = inputVal;
-      const datalist = document.getElementById('villains-list-options');
-      const options = datalist ? datalist.querySelectorAll('option') : [];
-
-      // Buscar coincidencia en la clave o etiqueta
-      options.forEach(opt => {
-        if (opt.value === inputVal || opt.label === inputVal || opt.label.toLowerCase().includes(inputVal.toLowerCase())) {
-          selectedKey = opt.value;
+      if (!selectedPresetKey) {
+        // Intento de rescate si escribió el nombre exacto sin hacer clic en la lista
+        const typedText = document.getElementById('modal-villain-search').value.toLowerCase();
+        const found = globalDatabase.find(v => 
+          (v.key || '').toLowerCase() === typedText || 
+          (v.villainName || '').toLowerCase().includes(typedText)
+        );
+        if (found) {
+          selectedPresetKey = found.key;
+        } else {
+          return;
         }
-      });
-
-      socket.emit('select_preset', { presetKey: selectedKey });
+      }
+      socket.emit('select_preset', { presetKey: selectedPresetKey });
     }
 
     function adjustPlayers(delta) {
