@@ -1,5 +1,5 @@
 const express = require('express');
-const http = require('http');
+const http = http = require('http');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const path = require('path');
@@ -10,17 +10,57 @@ const io = new Server(server, { cors: { origin: "*" } });
 
 app.use(express.static('public'));
 
-const dbPath = path.join(__dirname, 'data', 'database.json');
+// Apuntamos al nuevo archivo JSON de la base de datos
+const dbPath = path.join(__dirname, 'data', 'villanos_y_planes.json');
 let presetDatabase = {};
 
 function loadDatabase() {
   try {
     if (fs.existsSync(dbPath)) {
-      presetDatabase = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-      console.log(`Base de datos cargada: ${Object.keys(presetDatabase).length} escenarios disponibles.`);
+      const rawData = fs.readFileSync(dbPath, 'utf8');
+      const cards = JSON.parse(rawData);
+      
+      presetDatabase = {};
+      const sets = {};
+
+      // Agrupamos las cartas por set_code para emparejar Villano y Plan Principal
+      cards.forEach(card => {
+        if (!card.set_code) return;
+        if (!sets[card.set_code]) sets[card.set_code] = { set_code: card.set_code };
+
+        if (card.tipo_carta === 'Villano' && (card.stage === 'I' || card.stage === '1')) {
+          sets[card.set_code].villain = card;
+        } else if (card.tipo_carta === 'Plan Principal' && (card.stage === '1A' || card.stage === 'A')) {
+          sets[card.set_code].mainScheme = card;
+        }
+      });
+
+      // Procesamos y estructuramos cada escenario encontrado
+      Object.values(sets).forEach(set => {
+        if (set.villain && set.mainScheme) {
+          // Extraemos el número de la vida base (ej: "12 (por jugador)" -> 12)
+          const healthMatch = set.villain.health ? String(set.villain.health).match(/\d+/) : null;
+          const baseHp = healthMatch ? parseInt(healthMatch[0], 10) : 10;
+
+          presetDatabase[set.set_code] = {
+            key: set.set_code,
+            villainName: set.villain.name,
+            baseHp: baseHp,
+            mainScheme: {
+              name: set.mainScheme.name,
+              baseThreat: parseInt(set.mainScheme.base_threat, 10) || 1,
+              baseThreshold: parseInt(set.mainScheme.threat_maxima, 10) || 7
+            }
+          };
+        }
+      });
+
+      console.log(`Base de datos cargada: ${Object.keys(presetDatabase).length} escenarios estructurados desde villanos_y_planes.json.`);
+    } else {
+      console.warn('No se encontró el archivo villanos_y_planes.json en la ruta data/');
     }
   } catch (e) {
-    console.error('Error cargando database.json:', e);
+    console.error('Error cargando villanos_y_planes.json:', e);
   }
 }
 loadDatabase();
@@ -98,7 +138,7 @@ io.on('connection', (socket) => {
     // Cargar Plan Principal
     room.threat.name = preset.mainScheme.name;
     room.threat.baseThreat = preset.mainScheme.baseThreat || 1;
-    room.threat.baseThreshold = preset.mainScheme.baseThreshold || preset.mainScheme.targetBase || 7;
+    room.threat.baseThreshold = preset.mainScheme.baseThreshold || 7;
     room.threat.current = room.threat.baseThreat * playerCount;
 
     // Cargar Villano Principal
