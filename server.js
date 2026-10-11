@@ -186,7 +186,7 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Cargar Plan Principal con los valores reales parsedos del JSON
+    // Cargar Plan Principal con los valores reales parseados del JSON
     room.threat.name = preset.mainScheme.name;
     room.threat.baseThreat = preset.mainScheme.baseThreat;
     room.threat.baseThreshold = preset.mainScheme.baseThreshold;
@@ -258,4 +258,54 @@ io.on('connection', (socket) => {
         if (room.villains[index]) {
           const newBase = Math.max(1, parseInt(baseHp) || 1);
           room.villains[index].baseHp = newBase;
-          room.villains[index].
+          room.villains[index].hp = newBase * (room.players || 1);
+        }
+        break;
+
+      case 'change_name':
+        if (room.villains[index]) {
+          room.villains[index].name = name;
+        }
+        break;
+
+      case 'add':
+        const newIdx = room.villains.length + 1;
+        const defaultBase = 10;
+        room.villains.push({
+          id: `v_${Date.now()}`,
+          name: `Esbirro / Villano ${newIdx}`,
+          baseHp: defaultBase,
+          hp: defaultBase * (room.players || 1)
+        });
+        break;
+
+      case 'remove':
+        if (room.villains.length > 0 && index >= 0 && index < room.villains.length) {
+          room.villains.splice(index, 1);
+        }
+        break;
+    }
+
+    io.to(code).emit('update_room', room);
+  });
+
+  socket.on('disconnect', () => {
+    const code = socket.roomCode;
+    if (code && rooms[code] && rooms[code].hostId === socket.id) {
+      const clients = io.sockets.adapter.rooms.get(code);
+      if (clients && clients.size > 0) {
+        const newHostId = Array.from(clients)[0];
+        rooms[code].hostId = newHostId;
+        io.to(newHostId).emit('init_session', { 
+          isHost: true, 
+          database: Object.values(presetDatabase) 
+        });
+      } else {
+        delete rooms[code];
+      }
+    }
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Servidor iniciado en puerto ${PORT}`));
