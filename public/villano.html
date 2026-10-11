@@ -144,4 +144,249 @@
     const socket = io();
     const urlParams = new URLSearchParams(window.location.search);
     const roomCode = urlParams.get('room') || 'MARV';
-    document.getElementById('room-badge').innerText
+    document.getElementById('room-badge').innerText = `SALA: ${roomCode}`;
+
+    let isHost = false;
+    let globalDatabase = [];
+    let selectedPresetKey = '';
+
+    socket.emit('join_room', { roomCode });
+
+    function populateVillainSelect(database) {
+      globalDatabase = database || [];
+      filterVillains('');
+    }
+
+    function filterVillains(query) {
+      const dropdown = document.getElementById('villains-dropdown');
+      if (!dropdown) return;
+
+      dropdown.innerHTML = '';
+      const text = query.toLowerCase().trim().replace(/_/g, ' ');
+
+      const filtered = globalDatabase.filter(v => {
+        const villano = (v.villainName || '').toLowerCase().replace(/_/g, ' ');
+        const plan = (v.mainSchemes && v.mainSchemes[0] && v.mainSchemes[0].name ? v.mainSchemes[0].name : '').toLowerCase().replace(/_/g, ' ');
+        const key = (v.key || '').toLowerCase().replace(/_/g, ' ');
+        
+        return villano.includes(text) || plan.includes(text) || key.includes(text);
+      });
+
+      if (filtered.length === 0) {
+        dropdown.style.display = 'none';
+        return;
+      }
+
+      filtered.forEach(v => {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        const villano = v.villainName || 'Villano';
+        const plan = v.mainSchemes && v.mainSchemes[0] && v.mainSchemes[0].name ? ` — ${v.mainSchemes[0].name}` : '';
+        item.textContent = `${villano}${plan} [set: ${v.key}]`;
+        
+        item.onclick = () => {
+          document.getElementById('modal-villain-search').value = `${villano}${plan}`;
+          selectedPresetKey = v.key; 
+          dropdown.style.display = 'none';
+        };
+
+        dropdown.appendChild(item);
+      });
+
+      dropdown.style.display = 'block';
+    }
+
+    document.addEventListener('click', (e) => {
+      const container = document.querySelector('.search-container');
+      const dropdown = document.getElementById('villains-dropdown');
+      if (container && !container.contains(e.target)) {
+        if (dropdown) dropdown.style.display = 'none';
+      }
+    });
+
+    socket.on('init_session', (data) => {
+      isHost = data.isHost;
+      if (data.database) {
+        populateVillainSelect(data.database);
+      }
+    });
+
+    socket.on('update_room', (data) => {
+      const modal = document.getElementById('villain-modal');
+      if (!data.selectedVillain && isHost) {
+        modal.style.display = 'flex';
+      } else {
+        modal.style.display = 'none';
+      }
+
+      if (data.database) {
+        populateVillainSelect(data.database);
+      }
+
+      const inputP = document.getElementById('players-count');
+      if (document.activeElement !== inputP) inputP.value = data.players || 1;
+
+      const players = data.players || 1;
+
+      // Renderizar planes principales
+      const schemesContainer = document.getElementById('schemes');
+      const schemes = data.schemes || [];
+
+      schemesContainer.innerHTML = '';
+      schemes.forEach((s, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card threat';
+        card.id = `card-scheme-${idx}`;
+
+        const schemeTitle = `${s.name || 'Plan Principal'}${s.stage ? ' ' + s.stage : ''}`;
+        const thresholdTotal = (s.baseThreshold || 7) * players;
+
+        card.innerHTML = `
+          ${schemes.length > 1 ? `<button class="btn-del" onclick="removeSchemeAt(${idx})">✕</button>` : ''}
+          
+          <input class="input-name" id="sname-${idx}" value="${schemeTitle}" placeholder="Nombre del Plan" 
+            onkeydown="if(event.key==='Enter') this.blur()" 
+            onchange="updateSchemeName(${idx}, this.value)">
+          
+          <div class="hp-display" id="sthreat-${idx}">${s.current || 0} / <span style="color: #aaa; font-size: 2.2rem;">${thresholdTotal}</span></div>
+          
+          <div class="btn-grid">
+            <button class="btn-minus" onclick="changeSchemeThreat(${idx}, -1)">-1</button>
+            <button class="btn-plus" onclick="changeSchemeThreat(${idx}, 1)">+1</button>
+            <button class="btn-minus" onclick="changeSchemeThreat(${idx}, -5)">-5</button>
+            <button class="btn-plus" onclick="changeSchemeThreat(${idx}, 5)">+5</button>
+            <button class="btn-minus" onclick="changeSchemeThreat(${idx}, -10)">-10</button>
+            <button class="btn-plus" onclick="changeSchemeThreat(${idx}, 10)">+10</button>
+          </div>
+
+          <div class="base-controls-row">
+            <div class="base-control-item">
+              <span>Amenaza Base / Jugador</span>
+              <input type="number" class="input-base-hp" id="sbase-${idx}" value="${s.baseThreat || 1}" min="1" 
+                onkeydown="if(event.key==='Enter') this.blur()" 
+                onchange="updateSchemeBaseThreat(${idx}, this.value)">
+            </div>
+            <div class="base-control-item">
+              <span>Umbral / Jugador</span>
+              <input type="number" class="input-base-hp" id="sthreshold-${idx}" value="${s.baseThreshold || 7}" min="1" 
+                onkeydown="if(event.key==='Enter') this.blur()" 
+                onchange="updateSchemeThresholdBase(${idx}, this.value)">
+            </div>
+          </div>
+        `;
+        schemesContainer.appendChild(card);
+      });
+
+      // Renderizar villanos y esbirros con formato "Nombre III" (sin guion ni "Fase")
+      const container = document.getElementById('villains');
+      const villains = data.villains || [];
+
+      container.innerHTML = '';
+      villains.forEach((v, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card villain';
+        card.id = `card-villain-${idx}`;
+
+        const cleanName = (v.name || 'Villano').replace(/\s*-\s*(Fase|Etapa)?\s*[I|V|X|A-Z|0-9]+/i, '').trim();
+        const stageSuffix = v.stage ? ` ${v.stage}` : '';
+        const villainTitle = cleanName.includes(v.stage) ? cleanName : `${cleanName}${stageSuffix}`;
+
+        card.innerHTML = `
+          ${villains.length > 1 ? `<button class="btn-del" onclick="removeVillainAt(${idx})">✕</button>` : ''}
+          
+          <input class="input-name" id="vname-${idx}" value="${villainTitle}" placeholder="Nombre del Villano" 
+            onkeydown="if(event.key==='Enter') this.blur()" 
+            onchange="updateVillainName(${idx}, this.value)">
+          
+          <div class="hp-display" id="vhp-${idx}">${v.hp || 0}</div>
+          
+          <div class="btn-grid">
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -1)">-1</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 1)">+1</button>
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -5)">-5</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 5)">+5</button>
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -10)">-10</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 10)">+10</button>
+          </div>
+
+          <div class="base-controls-row" style="margin-top: 10px;">
+            <div class="base-control-item">
+              <span>HP Base por Jugador</span>
+              <input type="number" class="input-base-hp" id="vbase-${idx}" value="${v.baseHp || 10}" min="1" 
+                onkeydown="if(event.key==='Enter') this.blur()" 
+                onchange="updateBaseHP(${idx}, this.value)">
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    });
+
+    function confirmVillainSelection() {
+      if (!selectedPresetKey) {
+        const typedText = document.getElementById('modal-villain-search').value.toLowerCase().trim().replace(/_/g, ' ');
+        const found = globalDatabase.find(v => 
+          (v.key || '').toLowerCase().replace(/_/g, ' ') === typedText || 
+          (v.villainName || '').toLowerCase().replace(/_/g, ' ').includes(typedText)
+        );
+        if (found) {
+          selectedPresetKey = found.key;
+        } else {
+          return;
+        }
+      }
+      socket.emit('select_preset', { presetKey: selectedPresetKey });
+    }
+
+    function adjustPlayers(delta) {
+      const inputP = document.getElementById('players-count');
+      const valActual = parseInt(inputP.value) || 1;
+      const newQty = Math.max(1, valActual + delta);
+      inputP.value = newQty;
+      socket.emit('update_players', { players: newQty });
+    }
+
+    function setPlayers(val) {
+      const p = parseInt(val);
+      if (isNaN(p) || p < 1) return;
+      socket.emit('update_players', { players: p });
+    }
+
+    // Funciones de avance de etapa global
+    function nextSchemeStage() { socket.emit('next_scheme_stage'); }
+    function nextVillainStage() { socket.emit('next_villain_stage'); }
+
+    // Funciones de control de planes
+    function changeSchemeThreat(index, delta) { socket.emit('update_scheme', { action: 'change_threat', index, delta }); }
+    function updateSchemeName(index, name) { socket.emit('update_scheme', { action: 'change_name', index, name }); }
+    function updateSchemeBaseThreat(index, baseThreat) { socket.emit('update_scheme', { action: 'change_base_threat', index, baseThreat: parseInt(baseThreat) || 1 }); }
+    function updateSchemeThresholdBase(index, baseThreshold) { socket.emit('update_scheme', { action: 'change_threshold', index, baseThreshold: parseInt(baseThreshold) || 7 }); }
+    function addScheme() { socket.emit('update_scheme', { action: 'add' }); }
+    function removeScheme() { 
+      const container = document.getElementById('schemes');
+      if (container.children.length > 1) {
+        socket.emit('update_scheme', { action: 'remove', index: container.children.length - 1 });
+      }
+    }
+    function removeSchemeAt(index) { socket.emit('update_scheme', { action: 'remove', index }); }
+
+    // Funciones de control de villanos
+    function updateBaseHP(index, baseHp) {
+      const val = parseInt(baseHp);
+      if (isNaN(val) || val < 1) return;
+      socket.emit('update_villain', { action: 'change_base_hp', index, baseHp: val });
+    }
+
+    function addVillain() { socket.emit('update_villain', { action: 'add' }); }
+    function removeVillain() { 
+      const container = document.getElementById('villains');
+      if (container.children.length > 1) {
+        socket.emit('update_villain', { action: 'remove', index: container.children.length - 1 });
+      }
+    }
+    function removeVillainAt(index) { socket.emit('update_villain', { action: 'remove', index }); }
+    function changeVillainHP(index, delta) { socket.emit('update_villain', { action: 'change_hp', index, delta }); }
+    function updateVillainName(index, name) { socket.emit('update_villain', { action: 'change_name', index, name }); }
+  </script>
+</body>
+</html>
