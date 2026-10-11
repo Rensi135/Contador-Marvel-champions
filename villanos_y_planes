@@ -2675,9 +2675,9 @@
         "name": "¡La Hermandad ataca!",
         "stage": "1B",
         "health": "",
-        "base_threat": "0 (por jugador)",
-        "escalation_threat": "0 (por jugador)",
-        "threat_maxima": "0 (por jugador)"
+        "base_threat": "",
+        "escalation_threat": "",
+        "threat_maxima": ""
     },
     {
         "set_code": "mansion_attack",
