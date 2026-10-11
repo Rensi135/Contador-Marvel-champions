@@ -77,11 +77,13 @@
   <div class="modal-overlay" id="villain-modal">
     <div class="modal-card">
       <h2>Seleccionar Escenario</h2>
-      <p>Elige el villano de la base de datos para cargar automáticamente los datos del Plan Principal y Vida.</p>
+      <p>Escribe o selecciona el villano de la base de datos para cargar automáticamente los datos del Plan Principal y Vida.</p>
       
-      <select class="modal-select" id="modal-villain-select">
-        <option value="">-- Cargando escenarios... --</option>
-      </select>
+      <!-- Campo buscador con autocompletado datalist -->
+      <input class="modal-select" id="modal-villain-search" list="villains-list-options" placeholder="🔍 Escribe para buscar escenario..." autocomplete="off">
+      <datalist id="villains-list-options">
+        <!-- Las opciones se generan dinámicamente -->
+      </datalist>
 
       <button class="btn-confirm" onclick="confirmVillainSelection()">Cargar Escenario</button>
     </div>
@@ -156,18 +158,23 @@
 
     socket.emit('join_room', { roomCode });
 
+    // Poblar el datalist para que el buscador autocomplete y filtre automáticamente
     function populateVillainSelect(database) {
-      const select = document.getElementById('modal-villain-select');
-      if (!select || !Array.isArray(database) || database.length === 0) return;
+      const datalist = document.getElementById('villains-list-options');
+      if (!datalist || !Array.isArray(database) || database.length === 0) return;
 
-      select.innerHTML = '<option value="">-- Seleccionar escenario --</option>';
+      datalist.innerHTML = '';
       database.forEach(v => {
         const opt = document.createElement('option');
+        // Usamos la propiedad key (set_code)
         opt.value = v.key;
+        
         const villano = v.villainName || 'Villano';
         const plan = v.mainScheme && v.mainScheme.name ? ` — ${v.mainScheme.name}` : '';
-        opt.textContent = `${villano}${plan}`;
-        select.appendChild(opt);
+        
+        // Asignamos la etiqueta descriptiva para el desplegable visual
+        opt.label = `${villano}${plan}`;
+        datalist.appendChild(opt);
       });
     }
 
@@ -252,9 +259,23 @@
       });
     });
 
+    // Confirmar la selección buscando si coincide con key o etiqueta elegida
     function confirmVillainSelection() {
-      const selectedKey = document.getElementById('modal-villain-select').value;
-      if (!selectedKey) return;
+      const searchInput = document.getElementById('modal-villain-search');
+      const inputVal = searchInput ? searchInput.value.trim() : '';
+      if (!inputVal) return;
+
+      let selectedKey = inputVal;
+      const datalist = document.getElementById('villains-list-options');
+      const options = datalist ? datalist.querySelectorAll('option') : [];
+
+      // Buscar coincidencia en la clave o etiqueta
+      options.forEach(opt => {
+        if (opt.value === inputVal || opt.label === inputVal || opt.label.toLowerCase().includes(inputVal.toLowerCase())) {
+          selectedKey = opt.value;
+        }
+      });
+
       socket.emit('select_preset', { presetKey: selectedKey });
     }
 
