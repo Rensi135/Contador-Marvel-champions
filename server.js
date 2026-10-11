@@ -145,7 +145,7 @@ function loadDatabase() {
             rawVillains: set.villainsListRaw, 
             rawSchemes: set.schemesList,      
             isFixedTotalThreat: isApocalypse,
-            isMansionAttack: set.set_code === 'mansion_attack', // Marcador para Ataque a la Mansión
+            isMansionAttack: set.set_code === 'mansion_attack',
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
               stage: mainScheme.stage || mainScheme.stage_code || '1A',
@@ -173,7 +173,7 @@ function createRoomState(hostSocketId) {
     players: 1,
     schemes: [{ name: 'Plan Principal', stage: '', baseThreat: 1, baseThreshold: 7, current: 1 }],
     villains: [{ id: 'v1', name: 'Seleccionar Villano', baseHp: 10, hp: 10 }],
-    usedMansionSchemes: [], // Historial de planes 2B ya utilizados en mansion_attack
+    usedMansionSchemes: [],
     sideSchemes: [],
     heroes: []
   };
@@ -224,7 +224,7 @@ io.on('connection', (socket) => {
     if (!preset) return;
 
     room.selectedVillain = presetKey;
-    room.usedMansionSchemes = []; // Reiniciamos el registro de planes 2B usados al cambiar de escenario
+    room.usedMansionSchemes = [];
     const playerCount = room.players || 1;
 
     room.villains = preset.villainsList.map((v, index) => {
@@ -299,6 +299,12 @@ io.on('connection', (socket) => {
 
     const getNextSchemeStage = (current) => {
       const cur = String(current || '1A').trim().toUpperCase();
+      
+      // Salto directo de 1A -> 2B en Ataque a la Mansión
+      if (preset.isMansionAttack && cur === '1A') {
+        return '2B';
+      }
+
       const matchNumLetter = cur.match(/^(\d+)([A-Z])$/);
       if (matchNumLetter) {
         const num = matchNumLetter[1];
@@ -321,7 +327,7 @@ io.on('connection', (socket) => {
 
       let nextCard = null;
 
-      // REGLA MANSION_ATTACK: Si se avanza a 2B de forma aleatoria sin repetir
+      // REGLA MANSION_ATTACK: Elección aleatoria entre las cartas 2B sin repetir
       if (preset.isMansionAttack && targetStage === '2B') {
         const available2BCards = preset.rawSchemes.filter(s => {
           const sStage = String(s.stage || s.stage_code || '').toUpperCase();
@@ -334,7 +340,7 @@ io.on('connection', (socket) => {
           nextCard = available2BCards[randomIndex];
           room.usedMansionSchemes.push(nextCard.name);
         } else {
-          // Si ya se usaron todos, resetea el ciclo
+          // Si ya se usaron todos los planes 2B, reinicia el pozo de selección
           const all2BCards = preset.rawSchemes.filter(s => String(s.stage || s.stage_code || '').toUpperCase() === '2B');
           if (all2BCards.length > 0) {
             const randomIndex = Math.floor(Math.random() * all2BCards.length);
@@ -370,216 +376,3 @@ io.on('connection', (socket) => {
           if (matchTh) {
             scheme.baseThreshold = parseInt(matchTh[0], 10);
           }
-        }
-        
-        scheme.current = scheme.baseThreat * (room.players || 1);
-      }
-    });
-
-    io.to(code).emit('update_room', room);
-  });
-
-  // AVANCE DE ETAPA DINÁMICO Y ESCALABLE PARA VILLANOS (ROMANOS Y LETRAS)
-  socket.on('next_villain_stage', () => {
-    const code = socket.roomCode;
-    if (!code || !rooms[code]) return;
-    const room = rooms[code];
-    const preset = presetDatabase[room.selectedVillain];
-    if (!preset || !preset.rawVillains) return;
-    const playerCount = room.players || 1;
-
-    const romanToInt = (str) => {
-      const map = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
-      let result = 0;
-      const s = str.toUpperCase();
-      for (let i = 0; i < s.length; i++) {
-        const curr = map[s[i]];
-        const next = map[s[i + 1]];
-        if (next && curr < next) {
-          result += next - curr;
-          i++;
-        } else {
-          result += curr;
-        }
-      }
-      return isNaN(result) ? 0 : result;
-    };
-
-    const intToRoman = (num) => {
-      const lookup = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
-      let roman = '';
-      for (const i in lookup) {
-        while (num >= lookup[i]) {
-          roman += i;
-          num -= lookup[i];
-        }
-      }
-      return roman;
-    };
-
-    const getNextVillainStage = (current) => {
-      const cur = String(current || 'I').trim().toUpperCase();
-      if (/^[IVXLCDM]+$/.test(cur)) {
-        const nextInt = romanToInt(cur) + 1;
-        return intToRoman(nextInt);
-      }
-      if (/^[A-Z]$/.test(cur)) {
-        return String.fromCharCode(cur.charCodeAt(0) + 1);
-      }
-      if (/^\d+$/.test(cur)) {
-        return String(parseInt(cur, 10) + 1);
-      }
-      return 'II';
-    };
-
-    room.villains.forEach((villain) => {
-      const currentStage = String(villain.stage || 'I').toUpperCase();
-      const targetStage = getNextVillainStage(currentStage);
-
-      const nextCard = preset.rawVillains.find(v => {
-        const vStage = String(v.stage || v.stage_code || '').toUpperCase();
-        const curBaseName = villain.name.replace(/\s*[I|V|X|A-Z|0-9]+$/i, '').trim().toLowerCase();
-        const cardName = (v.name || '').toLowerCase();
-        return (cardName.includes(curBaseName) || curBaseName.includes(cardName)) && vStage === targetStage;
-      }) || preset.rawVillains.find(v => {
-        const vStage = String(v.stage || v.stage_code || '').toUpperCase();
-        return vStage === targetStage;
-      });
-
-      if (nextCard) {
-        const healthMatch = nextCard.health ? String(nextCard.health).match(/\d+/) : null;
-        const newBaseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(nextCard.health, 10) || villain.baseHp);
-        const baseName = (nextCard.name || villain.name).replace(/\s*-\s*(Fase|Etapa)?\s*[I|V|X|A-Z|0-9]+/i, '').replace(/\s*[I|V|X|A-Z|0-9]+$/, '').trim();
-
-        villain.name = baseName;
-        villain.stage = targetStage;
-        villain.baseHp = newBaseHp;
-        villain.hp = newBaseHp * playerCount;
-
-        if (preset.isFixedTotalThreat && room.schemes[0]) {
-          room.schemes[0].baseThreshold = newBaseHp;
-        }
-      }
-    });
-
-    io.to(code).emit('update_room', room);
-  });
-
-  socket.on('update_scheme', (data) => {
-    const code = socket.roomCode;
-    if (!code || !rooms[code]) return;
-
-    const room = rooms[code];
-    if (!room.schemes) room.schemes = [];
-    const { action, index, delta, name, baseThreat, baseThreshold } = data;
-
-    switch (action) {
-      case 'change_threat':
-        if (room.schemes[index]) {
-          room.schemes[index].current = Math.max(0, (room.schemes[index].current || 0) + delta);
-        }
-        break;
-      case 'change_base_threat':
-        if (room.schemes[index]) {
-          room.schemes[index].baseThreat = Math.max(1, baseThreat);
-        }
-        break;
-      case 'change_threshold':
-        if (room.schemes[index]) {
-          room.schemes[index].baseThreshold = Math.max(1, baseThreshold);
-        }
-        break;
-      case 'change_name':
-        if (room.schemes[index]) {
-          room.schemes[index].name = name;
-        }
-        break;
-      case 'add':
-        room.schemes.push({
-          name: 'Plan Principal',
-          stage: '',
-          baseThreat: 1,
-          baseThreshold: 7,
-          current: 1 * (room.players || 1)
-        });
-        break;
-      case 'remove':
-        if (room.schemes.length > 1 && index >= 0 && index < room.schemes.length) {
-          room.schemes.splice(index, 1);
-        }
-        break;
-    }
-
-    io.to(code).emit('update_room', room);
-  });
-
-  socket.on('update_villain', (data) => {
-    const code = socket.roomCode;
-    if (!code || !rooms[code]) return;
-
-    const room = rooms[code];
-    if (!room.villains) room.villains = [];
-    const { action, index, delta, name, baseHp } = data;
-
-    switch (action) {
-      case 'change_hp':
-        if (room.villains[index]) {
-          room.villains[index].hp = Math.max(0, room.villains[index].hp + delta);
-        }
-        break;
-
-      case 'change_base_hp':
-        if (room.villains[index]) {
-          const newBase = Math.max(1, parseInt(baseHp) || 1);
-          room.villains[index].baseHp = newBase;
-          room.villains[index].hp = newBase * (room.players || 1);
-        }
-        break;
-
-      case 'change_name':
-        if (room.villains[index]) {
-          room.villains[index].name = name;
-        }
-        break;
-
-      case 'add':
-        const newIdx = room.villains.length + 1;
-        const defaultBase = 10;
-        room.villains.push({
-          id: `v_${Date.now()}`,
-          name: `Esbirro / Villano ${newIdx}`,
-          baseHp: defaultBase,
-          hp: defaultBase * (room.players || 1)
-        });
-        break;
-
-      case 'remove':
-        if (room.villains.length > 1 && index >= 0 && index < room.villains.length) {
-          room.villains.splice(index, 1);
-        }
-        break;
-    }
-
-    io.to(code).emit('update_room', room);
-  });
-
-  socket.on('disconnect', () => {
-    const code = socket.roomCode;
-    if (code && rooms[code] && rooms[code].hostId === socket.id) {
-      const clients = io.sockets.adapter.rooms.get(code);
-      if (clients && clients.size > 0) {
-        const newHostId = Array.from(clients)[0];
-        rooms[code].hostId = newHostId;
-        io.to(newHostId).emit('init_session', { 
-          isHost: true, 
-          database: Object.values(presetDatabase) 
-        });
-      } else {
-        delete rooms[code];
-      }
-    }
-  });
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Servidor iniciado en puerto ${PORT}`));
