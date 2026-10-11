@@ -246,4 +246,121 @@
       
       document.getElementById('threat-display').innerText = data.threat.current || 0;
       
-      const players =
+      const players = data.players || 1;
+      const baseThreshold = data.threat.baseThreshold || 7;
+      document.getElementById('threshold-display').innerText = baseThreshold * players;
+
+      const threatBaseInput = document.getElementById('threat-base');
+      if (document.activeElement !== threatBaseInput) {
+        threatBaseInput.value = data.threat.baseThreat || 1;
+      }
+
+      const thresholdBaseInput = document.getElementById('threshold-base');
+      if (document.activeElement !== thresholdBaseInput) {
+        thresholdBaseInput.value = baseThreshold;
+      }
+
+      const container = document.getElementById('villains');
+      const villains = data.villains || [];
+
+      container.innerHTML = '';
+      villains.forEach((v, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card villain';
+        card.id = `card-villain-${idx}`;
+
+        card.innerHTML = `
+          ${villains.length > 1 ? `<button class="btn-del" onclick="removeVillainAt(${idx})">✕</button>` : ''}
+          
+          <input class="input-name" id="vname-${idx}" value="${v.name || ''}" placeholder="Nombre del Villano" 
+            onkeydown="if(event.key==='Enter') this.blur()" 
+            onchange="updateVillainName(${idx}, this.value)">
+          
+          <div class="hp-display" id="vhp-${idx}">${v.hp || 0}</div>
+          
+          <div class="btn-grid">
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -1)">-1</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 1)">+1</button>
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -5)">-5</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 5)">+5</button>
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -10)">-10</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 10)">+10</button>
+          </div>
+
+          <div class="base-controls-row" style="margin-top: 10px;">
+            <div class="base-control-item">
+              <span>HP Base por Jugador</span>
+              <input type="number" class="input-base-hp" id="vbase-${idx}" value="${v.baseHp || 10}" min="1" 
+                onkeydown="if(event.key==='Enter') this.blur()" 
+                onchange="updateBaseHP(${idx}, this.value)">
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    });
+
+    function confirmVillainSelection() {
+      if (!selectedPresetKey) {
+        const typedText = document.getElementById('modal-villain-search').value.toLowerCase().trim().replace(/_/g, ' ');
+        const found = globalDatabase.find(v => 
+          (v.key || '').toLowerCase().replace(/_/g, ' ') === typedText || 
+          (v.villainName || '').toLowerCase().replace(/_/g, ' ').includes(typedText)
+        );
+        if (found) {
+          selectedPresetKey = found.key;
+        } else {
+          return;
+        }
+      }
+      socket.emit('select_preset', { presetKey: selectedPresetKey });
+    }
+
+    function adjustPlayers(delta) {
+      const inputP = document.getElementById('players-count');
+      const valActual = parseInt(inputP.value) || 1;
+      const newQty = Math.max(1, valActual + delta);
+      inputP.value = newQty;
+      socket.emit('update_players', { players: newQty });
+    }
+
+    function setPlayers(val) {
+      const p = parseInt(val);
+      if (isNaN(p) || p < 1) return;
+      socket.emit('update_players', { players: p });
+    }
+
+    function updateThreatBase(val) {
+      const baseThreat = parseInt(val);
+      if (isNaN(baseThreat) || baseThreat < 1) return;
+      socket.emit('update_threat', { baseThreat });
+    }
+
+    function updateThresholdBase(val) {
+      const baseThreshold = parseInt(val);
+      if (isNaN(baseThreshold) || baseThreshold < 1) return;
+      socket.emit('update_threat', { baseThreshold });
+    }
+
+    function changeThreat(delta) { socket.emit('update_threat', { delta }); }
+    function updateThreatName(name) { socket.emit('update_threat', { name }); }
+
+    function updateBaseHP(index, baseHp) {
+      const val = parseInt(baseHp);
+      if (isNaN(val) || val < 1) return;
+      socket.emit('update_villain', { action: 'change_base_hp', index, baseHp: val });
+    }
+
+    function addVillain() { socket.emit('update_villain', { action: 'add' }); }
+    function removeVillain() { 
+      const container = document.getElementById('villains');
+      if (container.children.length > 0) {
+        socket.emit('update_villain', { action: 'remove', index: container.children.length - 1 });
+      }
+    }
+    function removeVillainAt(index) { socket.emit('update_villain', { action: 'remove', index }); }
+    function changeVillainHP(index, delta) { socket.emit('update_villain', { action: 'change_hp', index, delta }); }
+    function updateVillainName(index, name) { socket.emit('update_villain', { action: 'change_name', index, name }); }
+  </script>
+</body>
+</html>
