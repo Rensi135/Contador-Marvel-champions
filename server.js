@@ -33,12 +33,13 @@ function loadDatabase() {
           code = 'wrecking_crew';
         }
 
-        if (!sets[code]) sets[code] = { set_code: code, villainsMap: new Map(), schemesList: [] };
+        if (!sets[code]) sets[code] = { set_code: code, villainsMap: new Map(), villainsListRaw: [], schemesList: [] };
 
         const tipo = (card.tipo_carta || card.type_code || '').toLowerCase();
 
         if (tipo.includes('villano') || tipo.includes('villain')) {
           const villainName = card.name ? card.name.trim() : 'Villano';
+          sets[code].villainsListRaw.push(card);
           
           if (!sets[code].villainsMap.has(villainName)) {
             const healthMatch = card.health ? String(card.health).match(/\d+/) : null;
@@ -133,6 +134,8 @@ function loadDatabase() {
             key: set.set_code,
             villainName: villainsList[0].name,
             villainsList: villainsList,
+            rawVillains: set.villainsListRaw, // Guardamos todas las etapas de villanos
+            rawSchemes: set.schemesList,      // Guardamos todas las etapas de planes
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
               stage: mainScheme.stage || mainScheme.stage_code || '',
@@ -240,6 +243,71 @@ io.on('connection', (socket) => {
 
     room.villains.forEach(v => {
       v.hp = (v.baseHp || 10) * newCount;
+    });
+
+    io.to(code).emit('update_room', room);
+  });
+
+  // AVANCE DE ETAPA: SIGUIENTE PLAN
+  socket.on('next_scheme_stage', () => {
+    const code = socket.roomCode;
+    if (!code || !rooms[code]) return;
+    const room = rooms[code];
+    const preset = presetDatabase[room.selectedVillain];
+    if (!preset || !preset.rawSchemes) return;
+
+    const parseNumeric = (val, fallback) => {
+      if (val === undefined || val === null) return fallback;
+      const match = String(val).match(/\d+/);
+      return match ? parseInt(match[0], 10) : fallback;
+    };
+
+    room.schemes.forEach((scheme) => {
+      const currentStage = String(scheme.stage || '').toUpperCase();
+      const nextStageMap = { '1A': '1B', 'A': 'B', 'I': 'II', 'II': 'III' };
+      const targetStage = nextStageMap[currentStage] || (currentStage.includes('A') ? currentStage.replace('A', 'B') : 'B');
+
+      const nextCard = preset.rawSchemes.find(s => {
+        const sStage = String(s.stage || s.stage_code || '').toUpperCase();
+        return sStage === targetStage;
+      });
+
+      if (nextCard) {
+        scheme.name = nextCard.name || scheme.name;
+        scheme.stage = targetStage;
+        if (nextCard.base_threat !== undefined) scheme.baseThreat = parseNumeric(nextCard.base_threat, scheme.baseThreat);
+        const rawTh = nextCard.threat_maxima || nextCard.threshold;
+        if (rawTh !== undefined) scheme.baseThreshold = parseNumeric(rawTh, scheme.baseThreshold);
+      }
+    });
+
+    io.to(code).emit('update_room', room);
+  });
+
+  // AVANCE DE ETAPA: SIGUIENTE VILLANO
+  socket.on('next_villain_stage', () => {
+    const code = socket.roomCode;
+    if (!code || !rooms[code]) return;
+    const room = rooms[code];
+    const preset = presetDatabase[room.selectedVillain];
+    if (!preset || !preset.rawVillains) return;
+    const playerCount = room.players || 1;
+
+    room.villains.forEach((villain) => {
+      const nextCard = preset.rawVillains.find(v => {
+        const vName = (v.name || '').toLowerCase();
+        const curName = villain.name.toLowerCase();
+        const vStage = String(v.stage || v.stage_code || '').toUpperCase();
+        return vName.includes(curName) && (vStage === 'B' || vStage === 'II' || vStage === '2');
+      });
+
+      if (nextCard) {
+        const healthMatch = nextCard.health ? String(nextCard.health).match(/\d+/) : null;
+        const newBaseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(nextCard.health, 10) || villain.baseHp);
+        villain.name = nextCard.name || villain.name;
+        villain.baseHp = newBaseHp;
+        villain.hp = newBaseHp * playerCount;
+      }
     });
 
     io.to(code).emit('update_room', room);
