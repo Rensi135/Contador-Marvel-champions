@@ -277,7 +277,7 @@
         schemesContainer.appendChild(card);
       });
 
-      // Renderizar villanos y esbirros
+      // Renderizar villanos y esbirros con formato "Nombre - Fase X"
       const container = document.getElementById('villains');
       const villains = data.villains || [];
 
@@ -287,10 +287,13 @@
         card.className = 'card villain';
         card.id = `card-villain-${idx}`;
 
+        const stageSuffix = v.stage ? ` - Fase ${v.stage}` : '';
+        const villainTitle = v.name ? (v.name.includes('Fase') ? v.name : `${v.name}${stageSuffix}`) : 'Villano';
+
         card.innerHTML = `
           ${villains.length > 1 ? `<button class="btn-del" onclick="removeVillainAt(${idx})">✕</button>` : ''}
           
-          <input class="input-name" id="vname-${idx}" value="${v.name || ''}" placeholder="Nombre del Villano" 
+          <input class="input-name" id="vname-${idx}" value="${villainTitle}" placeholder="Nombre del Villano" 
             onkeydown="if(event.key==='Enter') this.blur()" 
             onchange="updateVillainName(${idx}, this.value)">
           
