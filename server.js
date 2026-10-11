@@ -29,7 +29,7 @@ function loadDatabase() {
 
         let code = card.set_code.toLowerCase().trim();
 
-        // Agrupación especial para El Grupo de Demolición (Wrecking Crew)
+        // Agrupación especial para El Grupo de Demolición (Wrecking Crew) u otros sets multi-villano
         if (['wrecker', 'thunderball', 'piledriver', 'bulldozer'].includes(code)) {
           code = 'wrecking_crew';
         }
@@ -52,7 +52,7 @@ function loadDatabase() {
             });
           }
         } 
-        // 2. Acumulamos las cartas de plan principal
+        // 2. Acumulamos todas las cartas de plan principal
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme'))) {
           sets[code].schemesList.push(card);
         }
@@ -78,71 +78,84 @@ function loadDatabase() {
             return (max.match(/\d+/) && !max.includes('-1')) || base.match(/\d+/) || esc.match(/\d+/);
           };
 
-          let validScheme = null;
+          // Si es un set como el Grupo de Demolición, mapeamos TODOS los planes principales válidos (o las etapas B de cada uno)
+          // Si es un escenario normal, cogemos el plan principal principal aplicando la búsqueda secuencial
+          let selectedSchemes = [];
 
-          // Búsqueda secuencial estricta: 1B, luego 2B, 3B...
-          for (let stageNum = 1; stageNum <= 5; stageNum++) {
-            const candidate = schemes.find(s => {
-              const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
-              return stageStr === `${stageNum}B` || stageStr === `${stageNum}`;
-            });
-            if (candidate && hasValidThreat(candidate)) {
-              validScheme = candidate;
-              break;
+          if (set.set_code === 'wrecking_crew') {
+            // Filtramos planes válidos que tengan amenaza o pertenezcan a etapas de juego (como 1B)
+            selectedSchemes = schemes.filter(s => hasValidThreat(s) || String(s.stage || '').toUpperCase().includes('B'));
+          }
+
+          if (selectedSchemes.length === 0) {
+            let validScheme = null;
+            for (let stageNum = 1; stageNum <= 5; stageNum++) {
+              const candidate = schemes.find(s => {
+                const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
+                return stageStr === `${stageNum}B` || stageStr === `${stageNum}`;
+              });
+              if (candidate && hasValidThreat(candidate)) {
+                validScheme = candidate;
+                break;
+              }
             }
-          }
 
-          if (!validScheme) {
-            validScheme = schemes.find(s => hasValidThreat(s));
-          }
-
-          if (!validScheme) {
-            validScheme = schemes.find(s => String(s.stage || '').toUpperCase().includes('B')) || schemes[0] || {};
-          }
-
-          const mainScheme = validScheme;
-
-          const rawBaseThreat = mainScheme.base_threat !== undefined 
-            ? mainScheme.base_threat 
-            : (mainScheme.threat !== undefined ? mainScheme.threat : mainScheme.starting_threat);
-          const threatBase = parseNumeric(rawBaseThreat, 1);
-
-          let rawThreshold = undefined;
-          const possibleThresholdKeys = [
-            'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
-            'threat_fixed', 'max_threat', 'target', 'target_base', 
-            'threshold', 'fixed_threat', 'threat_star', 'threat_target'
-          ];
-
-          for (const key of possibleThresholdKeys) {
-            if (mainScheme[key] !== undefined && mainScheme[key] !== null && String(mainScheme[key]).match(/\d+/)) {
-              rawThreshold = mainScheme[key];
-              break;
+            if (!validScheme) {
+              validScheme = schemes.find(s => hasValidThreat(s));
             }
-          }
 
-          if (rawThreshold === undefined) {
-            const dynamicKey = Object.keys(mainScheme).find(k => {
-              const lower = k.toLowerCase();
-              return lower.includes('max') || lower.includes('target') || lower.includes('threshold') || lower.includes('limite');
-            });
-            if (dynamicKey) {
-              rawThreshold = mainScheme[dynamicKey];
+            if (!validScheme) {
+              validScheme = schemes.find(s => String(s.stage || '').toUpperCase().includes('B')) || schemes[0] || {};
             }
+            selectedSchemes = [validScheme];
           }
 
-          const threatMax = parseNumeric(rawThreshold, 7);
+          // Preparamos la lista estructurada de planes para el cliente
+          const formattedSchemes = selectedSchemes.map(mainScheme => {
+            const rawBaseThreat = mainScheme.base_threat !== undefined 
+              ? mainScheme.base_threat 
+              : (mainScheme.threat !== undefined ? mainScheme.threat : mainScheme.starting_threat);
+            const threatBase = parseNumeric(rawBaseThreat, 1);
 
-          presetDatabase[set.set_code] = {
-            key: set.set_code,
-            villainName: villainsList[0].name,
-            villainsList: villainsList, // Aquí se incluirán los 4 villanos juntos bajo 'wrecking_crew'
-            mainScheme: {
+            let rawThreshold = undefined;
+            const possibleThresholdKeys = [
+              'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
+              'threat_fixed', 'max_threat', 'target', 'target_base', 
+              'threshold', 'fixed_threat', 'threat_star', 'threat_target'
+            ];
+
+            for (const key of possibleThresholdKeys) {
+              if (mainScheme[key] !== undefined && mainScheme[key] !== null && String(mainScheme[key]).match(/\d+/)) {
+                rawThreshold = mainScheme[key];
+                break;
+              }
+            }
+
+            if (rawThreshold === undefined) {
+              const dynamicKey = Object.keys(mainScheme).find(k => {
+                const lower = k.toLowerCase();
+                return lower.includes('max') || lower.includes('target') || lower.includes('threshold') || lower.includes('limite');
+              });
+              if (dynamicKey) {
+                rawThreshold = mainScheme[dynamicKey];
+              }
+            }
+
+            const threatMax = parseNumeric(rawThreshold, 7);
+
+            return {
               name: mainScheme.name || 'Plan Principal',
               stage: mainScheme.stage || mainScheme.stage_code || '',
               baseThreat: threatBase,
               baseThreshold: threatMax
-            }
+            };
+          });
+
+          presetDatabase[set.set_code] = {
+            key: set.set_code,
+            villainName: villainsList[0].name,
+            villainsList: villainsList,
+            mainSchemes: formattedSchemes // Lista completa de planes principales del set
           };
         }
       });
@@ -219,13 +232,16 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    room.threat.name = preset.mainScheme.name;
-    room.threat.stage = preset.mainScheme.stage;
-    room.threat.baseThreat = preset.mainScheme.baseThreat;
-    room.threat.baseThreshold = preset.mainScheme.baseThreshold;
-    room.threat.current = preset.mainScheme.baseThreat * playerCount;
+    // Si el escenario tiene múltiples planes (como El Grupo de Demolición), podríamos cargar el primero por defecto o dejarlo preparado
+    const primaryScheme = preset.mainSchemes && preset.mainSchemes.length > 0 ? preset.mainSchemes[0] : { name: 'Plan Principal', stage: '', baseThreat: 1, baseThreshold: 7 };
 
-    // Carga todos los villanos definidos para este set (los 4 en el caso del Grupo de Demolición)
+    room.threat.name = primaryScheme.name;
+    room.threat.stage = primaryScheme.stage;
+    room.threat.baseThreat = primaryScheme.baseThreat;
+    room.threat.baseThreshold = primaryScheme.baseThreshold;
+    room.threat.current = primaryScheme.baseThreat * playerCount;
+
+    // Carga todos los villanos correspondientes
     room.villains = preset.villainsList.map((v, index) => ({
       id: `v_${index}_${Date.now()}`,
       name: v.name,
