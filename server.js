@@ -29,7 +29,6 @@ function loadDatabase() {
 
         let code = card.set_code.toLowerCase().trim();
 
-        // Agrupación especial para El Grupo de Demolición (Wrecking Crew) u otros sets multi-villano
         if (['wrecker', 'thunderball', 'piledriver', 'bulldozer'].includes(code)) {
           code = 'wrecking_crew';
         }
@@ -38,7 +37,6 @@ function loadDatabase() {
 
         const tipo = (card.tipo_carta || card.type_code || '').toLowerCase();
 
-        // 1. Guardamos los villanos únicos dentro del set
         if (tipo.includes('villano') || tipo.includes('villain')) {
           const villainName = card.name ? card.name.trim() : 'Villano';
           
@@ -52,13 +50,11 @@ function loadDatabase() {
             });
           }
         } 
-        // 2. Acumulamos todas las cartas de plan principal
         else if ((tipo.includes('plan principal') || tipo.includes('main_scheme'))) {
           sets[code].schemesList.push(card);
         }
       });
 
-      // Función auxiliar para extraer números de forma segura de cadenas o enteros
       const parseNumeric = (val, fallback) => {
         if (val === undefined || val === null) return fallback;
         const match = String(val).match(/\d+/);
@@ -78,12 +74,9 @@ function loadDatabase() {
             return (max.match(/\d+/) && !max.includes('-1')) || base.match(/\d+/) || esc.match(/\d+/);
           };
 
-          // Si es un set como el Grupo de Demolición, mapeamos TODOS los planes principales válidos (o las etapas B de cada uno)
-          // Si es un escenario normal, cogemos el plan principal principal aplicando la búsqueda secuencial
           let selectedSchemes = [];
 
           if (set.set_code === 'wrecking_crew') {
-            // Filtramos planes válidos que tengan amenaza o pertenezcan a etapas de juego (como 1B)
             selectedSchemes = schemes.filter(s => hasValidThreat(s) || String(s.stage || '').toUpperCase().includes('B'));
           }
 
@@ -110,7 +103,6 @@ function loadDatabase() {
             selectedSchemes = [validScheme];
           }
 
-          // Preparamos la lista estructurada de planes para el cliente
           const formattedSchemes = selectedSchemes.map(mainScheme => {
             const rawBaseThreat = mainScheme.base_threat !== undefined 
               ? mainScheme.base_threat 
@@ -147,7 +139,8 @@ function loadDatabase() {
               name: mainScheme.name || 'Plan Principal',
               stage: mainScheme.stage || mainScheme.stage_code || '',
               baseThreat: threatBase,
-              baseThreshold: threatMax
+              baseThreshold: threatMax,
+              current: threatBase
             };
           });
 
@@ -155,7 +148,7 @@ function loadDatabase() {
             key: set.set_code,
             villainName: villainsList[0].name,
             villainsList: villainsList,
-            mainSchemes: formattedSchemes // Lista completa de planes principales del set
+            mainSchemes: formattedSchemes
           };
         }
       });
@@ -175,13 +168,7 @@ function createRoomState(hostSocketId) {
     hostId: hostSocketId,
     selectedVillain: null,
     players: 1,
-    threat: { 
-      name: 'Plan Principal', 
-      stage: '',
-      baseThreat: 1, 
-      baseThreshold: 7, 
-      current: 1 
-    },
+    schemes: [{ name: 'Plan Principal', stage: '', baseThreat: 1, baseThreshold: 7, current: 1 }],
     villains: [{ id: 'v1', name: 'Seleccionar Villano', baseHp: 10, hp: 10 }],
     sideSchemes: [],
     heroes: []
@@ -207,6 +194,10 @@ io.on('connection', (socket) => {
     }
 
     const room = rooms[code];
+    
+    // Garantizamos que las salas existentes tengan propiedades seguras
+    if (!room.schemes) room.schemes = [{ name: 'Plan Principal', stage: '', baseThreat: 1, baseThreshold: 7, current: 1 }];
+    if (!room.villains) room.villains = [{ id: 'v1', name: 'Seleccionar Villano', baseHp: 10, hp: 10 }];
 
     socket.emit('init_session', { 
       isHost: isHost, 
@@ -232,16 +223,14 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Si el escenario tiene múltiples planes (como El Grupo de Demolición), podríamos cargar el primero por defecto o dejarlo preparado
-    const primaryScheme = preset.mainSchemes && preset.mainSchemes.length > 0 ? preset.mainSchemes[0] : { name: 'Plan Principal', stage: '', baseThreat: 1, baseThreshold: 7 };
+    room.schemes = (preset.mainSchemes || []).map(s => ({
+      name: s.name,
+      stage: s.stage,
+      baseThreat: s.baseThreat,
+      baseThreshold: s.baseThreshold,
+      current: s.baseThreat * playerCount
+    }));
 
-    room.threat.name = primaryScheme.name;
-    room.threat.stage = primaryScheme.stage;
-    room.threat.baseThreat = primaryScheme.baseThreat;
-    room.threat.baseThreshold = primaryScheme.baseThreshold;
-    room.threat.current = primaryScheme.baseThreat * playerCount;
-
-    // Carga todos los villanos correspondientes
     room.villains = preset.villainsList.map((v, index) => ({
       id: `v_${index}_${Date.now()}`,
       name: v.name,
@@ -267,23 +256,49 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
-  socket.on('update_threat', (data) => {
+  socket.on('update_scheme', (data) => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
 
     const room = rooms[code];
+    if (!room.schemes) room.schemes = [];
+    const { action, index, delta, name, baseThreat, baseThreshold } = data;
 
-    if (data.delta !== undefined) {
-      room.threat.current = Math.max(0, (room.threat.current || 0) + data.delta);
-    }
-    if (data.name !== undefined) {
-      room.threat.name = data.name;
-    }
-    if (data.baseThreat !== undefined) {
-      room.threat.baseThreat = Math.max(1, parseInt(data.baseThreat) || 1);
-    }
-    if (data.baseThreshold !== undefined) {
-      room.threat.baseThreshold = Math.max(1, parseInt(data.baseThreshold) || 1);
+    switch (action) {
+      case 'change_threat':
+        if (room.schemes[index]) {
+          room.schemes[index].current = Math.max(0, (room.schemes[index].current || 0) + delta);
+        }
+        break;
+      case 'change_base_threat':
+        if (room.schemes[index]) {
+          room.schemes[index].baseThreat = Math.max(1, baseThreat);
+        }
+        break;
+      case 'change_threshold':
+        if (room.schemes[index]) {
+          room.schemes[index].baseThreshold = Math.max(1, baseThreshold);
+        }
+        break;
+      case 'change_name':
+        if (room.schemes[index]) {
+          room.schemes[index].name = name;
+        }
+        break;
+      case 'add':
+        room.schemes.push({
+          name: 'Plan Principal',
+          stage: '',
+          baseThreat: 1,
+          baseThreshold: 7,
+          current: 1 * (room.players || 1)
+        });
+        break;
+      case 'remove':
+        if (room.schemes.length > 1 && index >= 0 && index < room.schemes.length) {
+          room.schemes.splice(index, 1);
+        }
+        break;
     }
 
     io.to(code).emit('update_room', room);
@@ -294,6 +309,7 @@ io.on('connection', (socket) => {
     if (!code || !rooms[code]) return;
 
     const room = rooms[code];
+    if (!room.villains) room.villains = [];
     const { action, index, delta, name, baseHp } = data;
 
     switch (action) {
@@ -329,7 +345,7 @@ io.on('connection', (socket) => {
         break;
 
       case 'remove':
-        if (room.villains.length > 0 && index >= 0 && index < room.villains.length) {
+        if (room.villains.length > 1 && index >= 0 && index < room.villains.length) {
           room.villains.splice(index, 1);
         }
         break;
