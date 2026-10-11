@@ -108,6 +108,7 @@ function loadDatabase() {
             villainsList: villainsList,        // 1 tarjeta por cada villano único distinto
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
+              stage: mainScheme.stage || mainScheme.stage_code || '', // <-- Capturamos la etapa (stage) correctamente
               baseThreat: threatBase,
               baseThreshold: threatMax
             }
@@ -132,6 +133,7 @@ function createRoomState(hostSocketId) {
     players: 1,
     threat: { 
       name: 'Plan Principal', 
+      stage: '',
       baseThreat: 1, 
       baseThreshold: 7, 
       current: 1 
@@ -186,8 +188,9 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Cargar Plan Principal con los valores reales parseados del JSON
+    // Cargar Plan Principal con los valores y la etapa (stage) reales del JSON
     room.threat.name = preset.mainScheme.name;
+    room.threat.stage = preset.mainScheme.stage;
     room.threat.baseThreat = preset.mainScheme.baseThreat;
     room.threat.baseThreshold = preset.mainScheme.baseThreshold;
     room.threat.current = preset.mainScheme.baseThreat * playerCount;
