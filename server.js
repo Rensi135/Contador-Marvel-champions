@@ -72,7 +72,7 @@ function loadDatabase() {
             const max = String(s.threat_maxima || '');
             const base = String(s.base_threat || '');
             const esc = String(s.escalation_threat || '');
-            return (max.match(/\d+/) && !max.includes('-1')) || base.match(/\d+/) || esc.match(/\d+/);
+            return base.match(/\d+/) || esc.match(/\d+/) || max.match(/\d+/) || max.includes('-1');
           };
 
           let validScheme = null;
@@ -80,7 +80,7 @@ function loadDatabase() {
           for (let stageNum = 1; stageNum <= 5; stageNum++) {
             const candidate = schemes.find(s => {
               const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
-              return stageStr === `${stageNum}A` || stageStr === `${stageNum}`;
+              return stageStr === `${stageNum}A` || stageStr === `${stageNum}` || stageStr === `${stageNum}B`;
             });
             if (candidate && hasValidThreat(candidate)) {
               validScheme = candidate;
@@ -103,31 +103,40 @@ function loadDatabase() {
             : (mainScheme.threat !== undefined ? mainScheme.threat : mainScheme.starting_threat);
           const threatBase = parseNumeric(rawBaseThreat, 1);
 
-          let rawThreshold = undefined;
-          const possibleThresholdKeys = [
-            'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
-            'threat_fixed', 'max_threat', 'target', 'target_base', 
-            'threshold', 'fixed_threat', 'threat_star', 'threat_target'
-          ];
+          // REGLA APOCALYPSE: Umbral ligado a la vida impresa del villano
+          const isApocalypse = set.set_code === 'apocalypse';
+          let threatMax = 7;
 
-          for (const key of possibleThresholdKeys) {
-            if (mainScheme[key] !== undefined && mainScheme[key] !== null && String(mainScheme[key]).match(/\d+/)) {
-              rawThreshold = mainScheme[key];
-              break;
+          if (isApocalypse && villainsList[0]) {
+            threatMax = villainsList[0].baseHp;
+          } else {
+            let rawThreshold = undefined;
+            const possibleThresholdKeys = [
+              'threat_maxima', 'escalation_threat', 'base_threat_fixed', 
+              'threat_fixed', 'max_threat', 'target', 'target_base', 
+              'threshold', 'fixed_threat', 'threat_star', 'threat_target'
+            ];
+
+            for (const key of possibleThresholdKeys) {
+              if (mainScheme[key] !== undefined && mainScheme[key] !== null && String(mainScheme[key]).match(/\d+/)) {
+                rawThreshold = mainScheme[key];
+                break;
+              }
             }
-          }
 
-          if (rawThreshold === undefined) {
-            const dynamicKey = Object.keys(mainScheme).find(k => {
-              const lower = k.toLowerCase();
-              return lower.includes('max') || lower.includes('target') || lower.includes('threshold') || lower.includes('limite');
-            });
-            if (dynamicKey) {
-              rawThreshold = mainScheme[dynamicKey];
+            if (rawThreshold === undefined) {
+              const dynamicKey = Object.keys(mainScheme).find(k => {
+                const lower = k.toLowerCase();
+                return lower.includes('max') || lower.includes('target') || lower.includes('threshold') || lower.includes('limite');
+              });
+              if (dynamicKey) {
+                rawThreshold = mainScheme[dynamicKey];
+              }
             }
-          }
 
-          const threatMax = parseNumeric(rawThreshold, 7);
+            const matchThreshold = rawThreshold !== undefined ? String(rawThreshold).match(/\d+/) : null;
+            threatMax = matchThreshold ? parseInt(matchThreshold[0], 10) : 7;
+          }
 
           presetDatabase[set.set_code] = {
             key: set.set_code,
@@ -135,6 +144,7 @@ function loadDatabase() {
             villainsList: villainsList,
             rawVillains: set.villainsListRaw, 
             rawSchemes: set.schemesList,      
+            isFixedTotalThreat: isApocalypse,
             mainScheme: {
               name: mainScheme.name || 'Plan Principal',
               stage: mainScheme.stage || mainScheme.stage_code || '1A',
@@ -214,14 +224,6 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    room.schemes = [{
-      name: preset.mainScheme.name,
-      stage: preset.mainScheme.stage || '1A',
-      baseThreat: preset.mainScheme.baseThreat,
-      baseThreshold: preset.mainScheme.baseThreshold,
-      current: preset.mainScheme.baseThreat * playerCount
-    }];
-
     room.villains = preset.villainsList.map((v, index) => {
       const firstCard = (preset.rawVillains || []).find(card => {
         const cName = (card.name || '').toLowerCase();
@@ -246,6 +248,19 @@ io.on('connection', (socket) => {
         hp: baseHp * playerCount
       };
     });
+
+    let finalThreshold = preset.mainScheme.baseThreshold;
+    if (preset.isFixedTotalThreat && room.villains[0]) {
+      finalThreshold = room.villains[0].baseHp;
+    }
+
+    room.schemes = [{
+      name: preset.mainScheme.name,
+      stage: preset.mainScheme.stage || '1A',
+      baseThreat: preset.mainScheme.baseThreat,
+      baseThreshold: finalThreshold,
+      current: preset.mainScheme.baseThreat * playerCount
+    }];
 
     io.to(code).emit('update_room', room);
   });
@@ -318,8 +333,17 @@ io.on('connection', (socket) => {
         scheme.name = nextCard.name || scheme.name;
         scheme.stage = foundStage;
         if (nextCard.base_threat !== undefined) scheme.baseThreat = parseNumeric(nextCard.base_threat, scheme.baseThreat);
-        const rawTh = nextCard.threat_maxima || nextCard.threshold;
-        if (rawTh !== undefined) scheme.baseThreshold = parseNumeric(rawTh, scheme.baseThreshold);
+        
+        if (preset.isFixedTotalThreat && room.villains[0]) {
+          scheme.baseThreshold = room.villains[0].baseHp;
+        } else {
+          const rawTh = nextCard.threat_maxima || nextCard.threshold;
+          const matchTh = rawTh !== undefined ? String(rawTh).match(/\d+/) : null;
+          if (matchTh) {
+            scheme.baseThreshold = parseInt(matchTh[0], 10);
+          }
+        }
+        
         scheme.current = scheme.baseThreat * (room.players || 1);
       }
     });
@@ -403,6 +427,10 @@ io.on('connection', (socket) => {
         villain.stage = targetStage;
         villain.baseHp = newBaseHp;
         villain.hp = newBaseHp * playerCount;
+
+        if (preset.isFixedTotalThreat && room.schemes[0]) {
+          room.schemes[0].baseThreshold = newBaseHp;
+        }
       }
     });
 
