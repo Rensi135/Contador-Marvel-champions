@@ -77,7 +77,6 @@ function loadDatabase() {
 
           let validScheme = null;
 
-          // Búsqueda secuencial estricta: 1A, 1B, etc.
           for (let stageNum = 1; stageNum <= 5; stageNum++) {
             const candidate = schemes.find(s => {
               const stageStr = String(s.stage || s.stage_code || '').toUpperCase();
@@ -215,7 +214,6 @@ io.on('connection', (socket) => {
     room.selectedVillain = presetKey;
     const playerCount = room.players || 1;
 
-    // Inicializamos con el plan principal (fase 1A o similar)
     room.schemes = [{
       name: preset.mainScheme.name,
       stage: preset.mainScheme.stage || '1A',
@@ -224,7 +222,6 @@ io.on('connection', (socket) => {
       current: preset.mainScheme.baseThreat * playerCount
     }];
 
-    // Inicializamos los villanos buscando específicamente su Fase 1 / I / A
     room.villains = preset.villainsList.map((v, index) => {
       const firstCard = (preset.rawVillains || []).find(card => {
         const cName = (card.name || '').toLowerCase();
@@ -268,7 +265,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
-  // AVANCE DE ETAPA: SIGUIENTE PLAN (1A -> 1B -> 2A -> 2B...)
+  // AVANCE DE ETAPA DINÁMICO Y ESCALABLE PARA PLANES
   socket.on('next_scheme_stage', () => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -282,19 +279,44 @@ io.on('connection', (socket) => {
       return match ? parseInt(match[0], 10) : fallback;
     };
 
+    const getNextSchemeStage = (current) => {
+      const cur = String(current || '1A').trim().toUpperCase();
+      const matchNumLetter = cur.match(/^(\d+)([A-Z])$/);
+      if (matchNumLetter) {
+        const num = matchNumLetter[1];
+        const letter = matchNumLetter[2];
+        if (letter === 'A') return `${num}B`;
+        return `${parseInt(num, 10) + 1}A`;
+      }
+      if (/^[A-Z]$/.test(cur)) {
+        return String.fromCharCode(cur.charCodeAt(0) + 1);
+      }
+      if (/^\d+$/.test(cur)) {
+        return String(parseInt(cur, 10) + 1);
+      }
+      return cur;
+    };
+
     room.schemes.forEach((scheme) => {
       const currentStage = String(scheme.stage || '1A').toUpperCase();
-      const nextStageMap = { '1A': '1B', '1B': '2A', '2A': '2B', '2B': '3A', '3A': '3B', 'A': 'B', 'B': 'C' };
-      const targetStage = nextStageMap[currentStage] || '1B';
+      const targetStage = getNextSchemeStage(currentStage);
 
-      const nextCard = preset.rawSchemes.find(s => {
+      let nextCard = preset.rawSchemes.find(s => {
         const sStage = String(s.stage || s.stage_code || '').toUpperCase();
         return sStage === targetStage;
       });
 
+      if (!nextCard && preset.rawSchemes.length > 1) {
+        const currentIndex = preset.rawSchemes.findIndex(s => String(s.stage || s.stage_code || '').toUpperCase() === currentStage);
+        if (currentIndex !== -1 && currentIndex + 1 < preset.rawSchemes.length) {
+          nextCard = preset.rawSchemes[currentIndex + 1];
+        }
+      }
+
       if (nextCard) {
+        const foundStage = String(nextCard.stage || nextCard.stage_code || targetStage).toUpperCase();
         scheme.name = nextCard.name || scheme.name;
-        scheme.stage = targetStage;
+        scheme.stage = foundStage;
         if (nextCard.base_threat !== undefined) scheme.baseThreat = parseNumeric(nextCard.base_threat, scheme.baseThreat);
         const rawTh = nextCard.threat_maxima || nextCard.threshold;
         if (rawTh !== undefined) scheme.baseThreshold = parseNumeric(rawTh, scheme.baseThreshold);
@@ -305,7 +327,7 @@ io.on('connection', (socket) => {
     io.to(code).emit('update_room', room);
   });
 
-  // AVANCE DE ETAPA: SIGUIENTE VILLANO (I -> II -> III o 1 -> 2 -> 3)
+  // AVANCE DE ETAPA DINÁMICO Y ESCALABLE PARA VILLANOS (ROMANOS Y LETRAS)
   socket.on('next_villain_stage', () => {
     const code = socket.roomCode;
     if (!code || !rooms[code]) return;
@@ -314,14 +336,57 @@ io.on('connection', (socket) => {
     if (!preset || !preset.rawVillains) return;
     const playerCount = room.players || 1;
 
+    const romanToInt = (str) => {
+      const map = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+      let result = 0;
+      const s = str.toUpperCase();
+      for (let i = 0; i < s.length; i++) {
+        const curr = map[s[i]];
+        const next = map[s[i + 1]];
+        if (next && curr < next) {
+          result += next - curr;
+          i++;
+        } else {
+          result += curr;
+        }
+      }
+      return isNaN(result) ? 0 : result;
+    };
+
+    const intToRoman = (num) => {
+      const lookup = { M: 1000, CM: 900, D: 500, CD: 400, C: 100, XC: 90, L: 50, XL: 40, X: 10, IX: 9, V: 5, IV: 4, I: 1 };
+      let roman = '';
+      for (const i in lookup) {
+        while (num >= lookup[i]) {
+          roman += i;
+          num -= lookup[i];
+        }
+      }
+      return roman;
+    };
+
+    const getNextVillainStage = (current) => {
+      const cur = String(current || 'I').trim().toUpperCase();
+      if (/^[IVXLCDM]+$/.test(cur)) {
+        const nextInt = romanToInt(cur) + 1;
+        return intToRoman(nextInt);
+      }
+      if (/^[A-Z]$/.test(cur)) {
+        return String.fromCharCode(cur.charCodeAt(0) + 1);
+      }
+      if (/^\d+$/.test(cur)) {
+        return String(parseInt(cur, 10) + 1);
+      }
+      return 'II';
+    };
+
     room.villains.forEach((villain) => {
       const currentStage = String(villain.stage || 'I').toUpperCase();
-      const nextStageMap = { 'I': 'II', 'II': 'III', 'III': 'I', '1': '2', '2': '3', '3': '1', 'A': 'B', 'B': 'C' };
-      const targetStage = nextStageMap[currentStage] || 'II';
+      const targetStage = getNextVillainStage(currentStage);
 
       const nextCard = preset.rawVillains.find(v => {
         const vStage = String(v.stage || v.stage_code || '').toUpperCase();
-        const curBaseName = villain.name.replace(/\s*-\s*(Fase|Etapa)?\s*[I|V|X|A-Z|0-9]+/i, '').trim().toLowerCase();
+        const curBaseName = villain.name.replace(/\s*[I|V|X|A-Z|0-9]+$/i, '').trim().toLowerCase();
         const cardName = (v.name || '').toLowerCase();
         return (cardName.includes(curBaseName) || curBaseName.includes(cardName)) && vStage === targetStage;
       }) || preset.rawVillains.find(v => {
@@ -332,7 +397,7 @@ io.on('connection', (socket) => {
       if (nextCard) {
         const healthMatch = nextCard.health ? String(nextCard.health).match(/\d+/) : null;
         const newBaseHp = healthMatch ? parseInt(healthMatch[0], 10) : (parseInt(nextCard.health, 10) || villain.baseHp);
-        const baseName = (nextCard.name || villain.name).replace(/\s*-\s*(Fase|Etapa)?\s*[I|V|X|A-Z|0-9]+/i, '').trim();
+        const baseName = (nextCard.name || villain.name).replace(/\s*-\s*(Fase|Etapa)?\s*[I|V|X|A-Z|0-9]+/i, '').replace(/\s*[I|V|X|A-Z|0-9]+$/, '').trim();
 
         villain.name = baseName;
         villain.stage = targetStage;
