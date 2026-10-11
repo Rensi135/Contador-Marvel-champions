@@ -64,4 +64,245 @@
     /* MODAL SELECCIÓN INICIAL */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; padding: 16px; }
     .modal-card { background: #18181c; padding: 24px; border-radius: 12px; border: 2px solid #fbc02d; text-align: center; max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
-    .modal-card h2 { color: #fbc02d; font-size: 1.2rem; text-transform:
+    .modal-card h2 { color: #fbc02d; font-size: 1.2rem; text-transform: uppercase; }
+    .modal-card p { color: #aaa; font-size: 0.85rem; line-height: 1.3; }
+    .modal-select { width: 100%; padding: 12px; background: #000; color: #fff; border: 1px solid #fbc02d; border-radius: 8px; font-size: 0.95rem; outline: none; }
+    .btn-confirm { width: 100%; padding: 12px; background: #fbc02d; color: #000; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; text-transform: uppercase; }
+    .btn-confirm:active { background: #f57c00; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- MODAL SELECCIÓN DE VILLANO -->
+  <div class="modal-overlay" id="villain-modal">
+    <div class="modal-card">
+      <h2>Seleccionar Escenario</h2>
+      <p>Elige el villano de la base de datos para cargar automáticamente los datos del Plan Principal y Vida.</p>
+      
+      <select class="modal-select" id="modal-villain-select">
+        <option value="">-- Cargando escenarios... --</option>
+      </select>
+
+      <button class="btn-confirm" onclick="confirmVillainSelection()">Cargar Escenario</button>
+    </div>
+  </div>
+
+  <header>
+    <h1>PANEL DE VILLANO</h1>
+    <div class="badge" id="room-badge">SALA: -</div>
+  </header>
+
+  <!-- CONTROL DE JUGADORES -->
+  <div class="players-selector">
+    <span>Jugadores Totales:</span>
+    <div class="players-counter">
+      <button class="btn-qty" onclick="adjustPlayers(-1)">-</button>
+      <input type="number" class="input-players" id="players-count" value="1" min="1" onkeydown="if(event.key==='Enter') this.blur()" onchange="setPlayers(this.value)">
+      <button class="btn-qty" onclick="adjustPlayers(1)">+</button>
+    </div>
+  </div>
+
+  <!-- PLAN PRINCIPAL -->
+  <div class="section-title"><span>Plan Principal</span></div>
+  <div class="card threat">
+    <input class="input-name" id="threat-title" placeholder="Nombre del Plan" onkeydown="if(event.key==='Enter') this.blur()" onchange="updateThreatName(this.value)">
+    
+    <div class="hp-display">
+      <span id="threat-display">0</span> / <span id="threshold-display" style="color: #aaa; font-size: 2.2rem;">0</span>
+    </div>
+    
+    <div class="btn-grid">
+      <button class="btn-minus" onclick="changeThreat(-1)">-1</button>
+      <button class="btn-plus" onclick="changeThreat(1)">+1</button>
+      <button class="btn-minus" onclick="changeThreat(-5)">-5</button>
+      <button class="btn-plus" onclick="changeThreat(5)">+5</button>
+      <button class="btn-minus" onclick="changeThreat(-10)">-10</button>
+      <button class="btn-plus" onclick="changeThreat(10)">+10</button>
+    </div>
+
+    <div class="base-controls-row">
+      <div class="base-control-item">
+        <span>Amenaza Base / Jugador</span>
+        <input type="number" class="input-base-hp" id="threat-base" value="1" min="1" 
+          onkeydown="if(event.key==='Enter') this.blur()" 
+          onchange="updateThreatBase(this.value)">
+      </div>
+      <div class="base-control-item">
+        <span>Umbral / Jugador</span>
+        <input type="number" class="input-base-hp" id="threshold-base" value="7" min="1" 
+          onkeydown="if(event.key==='Enter') this.blur()" 
+          onchange="updateThresholdBase(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <!-- VILLANOS Y ESBIRROS -->
+  <div class="section-title">
+    <span>Villanos y Esbirros</span>
+    <div class="btn-actions">
+      <button class="btn-action" onclick="removeVillain()">- Villano</button>
+      <button class="btn-action" onclick="addVillain()">+ Villano</button>
+    </div>
+  </div>
+  <div class="villains-list" id="villains"></div>
+
+  <script>
+    const socket = io();
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomCode = urlParams.get('room') || 'MARV';
+    document.getElementById('room-badge').innerText = `SALA: ${roomCode}`;
+
+    let isHost = false;
+
+    socket.emit('join_room', { roomCode });
+
+    function populateVillainSelect(database) {
+      const select = document.getElementById('modal-villain-select');
+      if (!select || !Array.isArray(database) || database.length === 0) return;
+
+      select.innerHTML = '<option value="">-- Seleccionar escenario --</option>';
+      database.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.key;
+        const villano = v.villainName || 'Villano';
+        const plan = v.mainScheme && v.mainScheme.name ? ` — ${v.mainScheme.name}` : '';
+        opt.textContent = `${villano}${plan}`;
+        select.appendChild(opt);
+      });
+    }
+
+    socket.on('init_session', (data) => {
+      isHost = data.isHost;
+      if (data.database) {
+        populateVillainSelect(data.database);
+      }
+    });
+
+    socket.on('update_room', (data) => {
+      const modal = document.getElementById('villain-modal');
+      if (!data.selectedVillain && isHost) {
+        modal.style.display = 'flex';
+      } else {
+        modal.style.display = 'none';
+      }
+
+      if (data.database) {
+        populateVillainSelect(data.database);
+      }
+
+      const inputP = document.getElementById('players-count');
+      if (document.activeElement !== inputP) inputP.value = data.players || 1;
+
+      const threatInput = document.getElementById('threat-title');
+      if (document.activeElement !== threatInput) threatInput.value = data.threat.name || 'Plan Principal';
+      
+      document.getElementById('threat-display').innerText = data.threat.current || 0;
+      
+      const players = data.players || 1;
+      const baseThreshold = data.threat.baseThreshold || 7;
+      document.getElementById('threshold-display').innerText = baseThreshold * players;
+
+      const threatBaseInput = document.getElementById('threat-base');
+      if (document.activeElement !== threatBaseInput) {
+        threatBaseInput.value = data.threat.baseThreat || 1;
+      }
+
+      const thresholdBaseInput = document.getElementById('threshold-base');
+      if (document.activeElement !== thresholdBaseInput) {
+        thresholdBaseInput.value = baseThreshold;
+      }
+
+      const container = document.getElementById('villains');
+      const villains = data.villains || [];
+
+      container.innerHTML = '';
+      villains.forEach((v, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card villain';
+        card.id = `card-villain-${idx}`;
+
+        card.innerHTML = `
+          ${villains.length > 1 ? `<button class="btn-del" onclick="removeVillainAt(${idx})">✕</button>` : ''}
+          
+          <input class="input-name" id="vname-${idx}" value="${v.name || ''}" placeholder="Nombre del Villano" 
+            onkeydown="if(event.key==='Enter') this.blur()" 
+            onchange="updateVillainName(${idx}, this.value)">
+          
+          <div class="hp-display" id="vhp-${idx}">${v.hp || 0}</div>
+          
+          <div class="btn-grid">
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -1)">-1</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 1)">+1</button>
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -5)">-5</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 5)">+5</button>
+            <button class="btn-minus" onclick="changeVillainHP(${idx}, -10)">-10</button>
+            <button class="btn-plus" onclick="changeVillainHP(${idx}, 10)">+10</button>
+          </div>
+
+          <div class="base-controls-row" style="margin-top: 10px;">
+            <div class="base-control-item">
+              <span>HP Base por Jugador</span>
+              <input type="number" class="input-base-hp" id="vbase-${idx}" value="${v.baseHp || 10}" min="1" 
+                onkeydown="if(event.key==='Enter') this.blur()" 
+                onchange="updateBaseHP(${idx}, this.value)">
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    });
+
+    function confirmVillainSelection() {
+      const selectedKey = document.getElementById('modal-villain-select').value;
+      if (!selectedKey) return;
+      socket.emit('select_preset', { presetKey: selectedKey });
+    }
+
+    function adjustPlayers(delta) {
+      const inputP = document.getElementById('players-count');
+      const valActual = parseInt(inputP.value) || 1;
+      const newQty = Math.max(1, valActual + delta);
+      inputP.value = newQty;
+      socket.emit('update_players', { players: newQty });
+    }
+
+    function setPlayers(val) {
+      const p = parseInt(val);
+      if (isNaN(p) || p < 1) return;
+      socket.emit('update_players', { players: p });
+    }
+
+    function updateThreatBase(val) {
+      const baseThreat = parseInt(val);
+      if (isNaN(baseThreat) || baseThreat < 1) return;
+      socket.emit('update_threat', { baseThreat });
+    }
+
+    function updateThresholdBase(val) {
+      const baseThreshold = parseInt(val);
+      if (isNaN(baseThreshold) || baseThreshold < 1) return;
+      socket.emit('update_threat', { baseThreshold });
+    }
+
+    function changeThreat(delta) { socket.emit('update_threat', { delta }); }
+    function updateThreatName(name) { socket.emit('update_threat', { name }); }
+
+    function updateBaseHP(index, baseHp) {
+      const val = parseInt(baseHp);
+      if (isNaN(val) || val < 1) return;
+      socket.emit('update_villain', { action: 'change_base_hp', index, baseHp: val });
+    }
+
+    function addVillain() { socket.emit('update_villain', { action: 'add' }); }
+    function removeVillain() { 
+      const container = document.getElementById('villains');
+      if (container.children.length > 0) {
+        socket.emit('update_villain', { action: 'remove', index: container.children.length - 1 });
+      }
+    }
+    function removeVillainAt(index) { socket.emit('update_villain', { action: 'remove', index }); }
+    function changeVillainHP(index, delta) { socket.emit('update_villain', { action: 'change_hp', index, delta }); }
+    function updateVillainName(index, name) { socket.emit('update_villain', { action: 'change_name', index, name }); }
+  </script>
+</body>
+</html>
